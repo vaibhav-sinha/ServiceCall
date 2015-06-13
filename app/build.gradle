@@ -1,0 +1,40 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        applicationId "com.servicecall.app"
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.google.dagger:dagger:2.0.1'
+    provided "com.google.dagger:dagger-compiler:2.0.1"
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    provided "org.projectlombok:lombok:1.12.6"
+    compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.mcxiaoke.volley:library:1.0.8'
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.squareup.picasso:picasso:2.4.0'
+}
