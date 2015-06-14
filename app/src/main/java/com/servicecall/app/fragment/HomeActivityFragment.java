@@ -7,19 +7,34 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.servicecall.app.R;
+import com.servicecall.app.application.ServiceCallApplication;
+import com.servicecall.app.base.BaseFragment;
+
+import butterknife.ButterKnife;
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
-public class HomeActivityFragment extends Fragment {
+public class HomeActivityFragment extends BaseFragment {
 
     public HomeActivityFragment() {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ServiceCallApplication.getApplication().getComponent().inject(this);
+        eventBus.register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        eventBus.unregister(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        ButterKnife.inject(this, rootView);
+        return rootView;
     }
 }

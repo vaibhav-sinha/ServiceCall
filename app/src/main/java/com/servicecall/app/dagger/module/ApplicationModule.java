@@ -5,11 +5,14 @@ import android.content.Context;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.servicecall.app.application.ServiceCallApplication;
+import com.servicecall.app.util.LocationUtil;
+import com.servicecall.app.util.Session;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by Vaibhav on 6/14/2015.
@@ -29,9 +32,28 @@ public class ApplicationModule {
         return serviceCallApplication;
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     public RequestQueue provideRequestQueue() {
         /** Set up to use OkHttp */
         return Volley.newRequestQueue(this.serviceCallApplication);
+    }
+
+    @Provides
+    @Singleton
+    EventBus provideEventBus() {
+        return EventBus.builder().logNoSubscriberMessages(false).sendNoSubscriberEvent(false).build();
+    }
+
+    @Provides
+    @Singleton
+    LocationUtil provideLocationUtil() {
+        return new LocationUtil();
+    }
+
+    @Provides
+    @Singleton
+    Session provideSession() {
+        return new Session();
     }
 }
