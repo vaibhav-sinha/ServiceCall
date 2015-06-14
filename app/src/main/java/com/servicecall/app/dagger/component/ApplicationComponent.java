@@ -1,14 +1,20 @@
 package com.servicecall.app.dagger.component;
 
+import com.servicecall.app.activity.AddDetailsActivity;
 import com.servicecall.app.activity.HomeActivity;
 import com.servicecall.app.activity.SelectCategoryActivity;
+import com.servicecall.app.activity.SelectComplaintActivity;
+import com.servicecall.app.activity.SelectSubCategoryActivity;
 import com.servicecall.app.activity.SplashActivity;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseActivity;
 import com.servicecall.app.dagger.module.ApplicationModule;
+import com.servicecall.app.fragment.AddDetailsFragment;
 import com.servicecall.app.fragment.GoogleMapFragment;
 import com.servicecall.app.fragment.HomeActivityFragment;
 import com.servicecall.app.fragment.SelectCategoryFragment;
+import com.servicecall.app.fragment.SelectComplaintFragment;
+import com.servicecall.app.fragment.SelectSubCategoryFragment;
 import com.servicecall.app.fragment.SplashFragment;
 import com.servicecall.app.util.LocationUtil;
 import com.servicecall.app.util.NetworkAccessHelper;
@@ -37,4 +43,10 @@ public interface ApplicationComponent {
     void inject(Session session);
     void inject(ReverseGeocodingTask reverseGeocodingTask);
     void inject(GoogleMapFragment googleMapFragment);
+    void inject(SelectSubCategoryActivity activity);
+    void inject(SelectSubCategoryFragment fragment);
+    void inject(SelectComplaintActivity activity);
+    void inject(SelectComplaintFragment fragment);
+    void inject(AddDetailsActivity activity);
+    void inject(AddDetailsFragment fragment);
 }

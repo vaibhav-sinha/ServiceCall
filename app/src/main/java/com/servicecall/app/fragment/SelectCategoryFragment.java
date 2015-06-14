@@ -114,6 +114,9 @@ public class SelectCategoryFragment extends BaseFragment implements OnMapReadyCa
         Double distance;
         Boolean doRevGeoCoding;
 
+        session.setLatitude(location.getLatitude());
+        session.setLongitude(location.getLongitude());
+
         if(mapReady) {
             googleMapFragment.updateMarkerLocation(location.getLatitude(), location.getLongitude());
         }

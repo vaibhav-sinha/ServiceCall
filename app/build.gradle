@@ -42,4 +42,5 @@ dependencies {
     compile files('libs/eswaraj-dto-1.0.0-SNAPSHOT.jar')
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.google.maps.android:android-maps-utils:0.3+'
+    compile 'cn.pedant.sweetalert:library:1.3'
 }

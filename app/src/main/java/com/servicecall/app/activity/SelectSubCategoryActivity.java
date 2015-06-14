@@ -10,24 +10,26 @@ import com.servicecall.app.R;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseActivity;
 import com.servicecall.app.event.CategorySelectEvent;
+import com.servicecall.app.event.SubCategorySelectEvent;
 import com.servicecall.app.fragment.SelectCategoryFragment;
+import com.servicecall.app.fragment.SelectSubCategoryFragment;
 
 import butterknife.ButterKnife;
 
-public class SelectCategoryActivity extends BaseActivity {
+public class SelectSubCategoryActivity extends BaseActivity {
 
-    private SelectCategoryFragment selectCategoryFragment;
+    SelectSubCategoryFragment selectSubCategoryFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_category);
+        setContentView(R.layout.activity_select_sub_category);
         ButterKnife.inject(this);
         ServiceCallApplication.getApplication().getComponent().inject(this);
         eventBus.register(this);
 
-        selectCategoryFragment = new SelectCategoryFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.sc_fl_container, selectCategoryFragment).commit();
+        selectSubCategoryFragment = new SelectSubCategoryFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.ssc_fl_container, selectSubCategoryFragment).commit();
     }
 
     @Override
@@ -36,7 +38,7 @@ public class SelectCategoryActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    public void onEventMainThread(CategorySelectEvent event) {
+    public void onEventMainThread(SubCategorySelectEvent event) {
         if(event.isSuccess()) {
             Intent i;
             if(event.getCategoryWithChildCategoryDto().getChildCategories().get(0).getChildCategories() != null) {
@@ -45,9 +47,22 @@ public class SelectCategoryActivity extends BaseActivity {
             }
             else {
                 i = new Intent(this, SelectComplaintActivity.class);
-                i.putExtra("complaint", event.getCategoryWithChildCategoryDto());
+                i.putExtra("complaintList", event.getCategoryWithChildCategoryDto());
             }
             startActivity(i);
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

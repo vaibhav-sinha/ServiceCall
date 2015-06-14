@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.servicecall.app" >
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,8 +15,8 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon,android:theme">
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" >
@@ -41,6 +42,26 @@
         <activity
             android:name=".activity.SelectCategoryActivity"
             android:label="@string/title_activity_select_category" >
+        </activity>
+        <activity
+            android:name=".activity.SelectSubCategoryActivity"
+            android:label="@string/title_activity_select_sub_category"
+            android:parentActivityName=".activity.SelectCategoryActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.servicecall.app.activity.SelectCategoryActivity" />
+        </activity>
+        <activity
+            android:name=".activity.SelectComplaintActivity"
+            android:label="@string/title_activity_select_complaint" >
+        </activity>
+        <activity
+            android:name=".activity.AddDetailsActivity"
+            android:label="@string/title_activity_add_details"
+            android:parentActivityName=".activity.SelectComplaintActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.servicecall.app.activity.SelectComplaintActivity" />
         </activity>
     </application>
 

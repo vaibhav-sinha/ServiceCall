@@ -2,7 +2,9 @@ package com.servicecall.app.util;
 
 import com.eswaraj.web.dto.CategoryWithChildCategoryDto;
 import com.servicecall.app.application.ServiceCallApplication;
+import com.servicecall.app.model.Complaint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
@@ -19,4 +21,7 @@ public class Session {
 
     private List<CategoryWithChildCategoryDto> categoryWithChildCategoryDtoList;
     private String userRevGeocodedLocation;
+    private List<Complaint> complaints = new ArrayList<>();
+    private Double latitude;
+    private Double longitude;
 }
