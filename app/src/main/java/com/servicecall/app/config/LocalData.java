@@ -67,6 +67,7 @@ public class LocalData {
         category.setRoot(false);
         category.setImageUrl("category4.jpg");
         category.setHeaderImageUrl("category4.h.jpg");
+        category.setColor("BBCCDD");
         category.setChildCategories(bathsList);
         bathsAndShowersList.add(category);
 
@@ -77,6 +78,7 @@ public class LocalData {
         category.setRoot(false);
         category.setImageUrl("category5.jpg");
         category.setHeaderImageUrl("category5.h.jpg");
+        category.setColor("ABCDEF");
         category.setChildCategories(showersList);
         bathsAndShowersList.add(category);
         //Baths and Showers list ends
