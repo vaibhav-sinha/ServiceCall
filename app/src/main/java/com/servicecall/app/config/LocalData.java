@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class LocalData {
 
-    private static List<CategoryWithChildCategoryDto> categoryWithChildCategoryDtoList;
+    private static List<CategoryWithChildCategoryDto> categoryWithChildCategoryDtoList = new ArrayList<>();
 
     public static List<CategoryWithChildCategoryDto> getCategoryData() {
         createCategoryData();
@@ -18,20 +18,80 @@ public class LocalData {
     }
 
     private static void createCategoryData() {
-        categoryWithChildCategoryDtoList = new ArrayList<>();
-        CategoryWithChildCategoryDto category = new CategoryWithChildCategoryDto();
+        CategoryWithChildCategoryDto category;
 
+        //Baths list
+        List<CategoryWithChildCategoryDto> bathsList = new ArrayList<>();
+        category = new CategoryWithChildCategoryDto();
         category.setId(0L);
+        category.setName("Water seeping between bath and wall");
+        category.setParentCategoryId(4L);
+        category.setRoot(false);
+        category.setChildCategories(null);
+        bathsList.add(category);
+
+        category = new CategoryWithChildCategoryDto();
+        category.setId(1L);
+        category.setName("Timber end panel broken");
+        category.setParentCategoryId(4L);
+        category.setRoot(false);
+        category.setChildCategories(null);
+        bathsList.add(category);
+        //Baths list ends
+
+        //Showers list
+        List<CategoryWithChildCategoryDto> showersList = new ArrayList<>();
+        category = new CategoryWithChildCategoryDto();
+        category.setId(2L);
+        category.setName("Electric shower needs repair");
+        category.setParentCategoryId(5L);
+        category.setRoot(false);
+        category.setChildCategories(null);
+        showersList.add(category);
+
+        category = new CategoryWithChildCategoryDto();
+        category.setId(3L);
+        category.setName("Shower spray head needs repair");
+        category.setParentCategoryId(5L);
+        category.setRoot(false);
+        category.setChildCategories(null);
+        showersList.add(category);
+        //Showers list ends
+
+        //Baths and Showers list
+        List<CategoryWithChildCategoryDto> bathsAndShowersList = new ArrayList<>();
+        category = new CategoryWithChildCategoryDto();
+        category.setId(4L);
+        category.setName("Baths");
+        category.setParentCategoryId(6L);
+        category.setRoot(false);
+        category.setImageUrl("category4.jpg");
+        category.setHeaderImageUrl("category4.h.jpg");
+        category.setChildCategories(bathsList);
+        bathsAndShowersList.add(category);
+
+        category = new CategoryWithChildCategoryDto();
+        category.setId(5L);
+        category.setName("Showers");
+        category.setParentCategoryId(6L);
+        category.setRoot(false);
+        category.setImageUrl("category5.jpg");
+        category.setHeaderImageUrl("category5.h.jpg");
+        category.setChildCategories(showersList);
+        bathsAndShowersList.add(category);
+        //Baths and Showers list ends
+
+        category.setId(6L);
         category.setName("Baths and Showers");
         category.setParentCategoryId(null);
         category.setRoot(true);
-        category.setImageUrl("category0.jpg");
-        category.setHeaderImageUrl("category0.h.jpg");
+        category.setImageUrl("category6.jpg");
+        category.setHeaderImageUrl("category6.h.jpg");
         category.setColor("AA00FF");
-        category.setChildCategories(null);
+        category.setChildCategories(bathsAndShowersList);
         categoryWithChildCategoryDtoList.add(category);
 
-        category = new CategoryWithChildCategoryDto();
+        /*category = new CategoryWithChildCategoryDto();
         category.setId(1L);
         category.setName("Communal");
         category.setParentCategoryId(null);
@@ -40,6 +100,7 @@ public class LocalData {
         category.setHeaderImageUrl("category1.h.jpg");
         category.setColor("FF00AA");
         category.setChildCategories(null);
-        categoryWithChildCategoryDtoList.add(category);
+        categoryWithChildCategoryDtoList.add(category);*/
+
     }
 }
