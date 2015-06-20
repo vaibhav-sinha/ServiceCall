@@ -83,6 +83,7 @@ public class LocalData {
         bathsAndShowersList.add(category);
         //Baths and Showers list ends
 
+        category = new CategoryWithChildCategoryDto();
         category.setId(6L);
         category.setName("Baths and Showers");
         category.setParentCategoryId(null);

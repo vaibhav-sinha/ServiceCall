@@ -45,7 +45,7 @@ public class SelectCategoryActivity extends BaseActivity {
             }
             else {
                 i = new Intent(this, SelectComplaintActivity.class);
-                i.putExtra("complaint", event.getCategoryWithChildCategoryDto());
+                i.putExtra("complaintList", event.getCategoryWithChildCategoryDto());
             }
             startActivity(i);
         }

@@ -76,7 +76,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    Server provideServer() {
+    ServerImpl provideServer() {
         return new ServerImpl();
     }
 

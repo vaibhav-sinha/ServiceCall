@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.eswaraj.web.dto.CategoryWithChildCategoryDto;
 import com.servicecall.app.R;
 import com.servicecall.app.adapter.CategoryListAdapter;
+import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseFragment;
 import com.servicecall.app.event.CategorySelectEvent;
 import com.servicecall.app.event.SubCategorySelectEvent;
@@ -42,6 +43,11 @@ public class SelectSubCategoryFragment extends BaseFragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ServiceCallApplication.getApplication().getComponent().inject(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

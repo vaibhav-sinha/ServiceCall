@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.eswaraj.web.dto.CategoryWithChildCategoryDto;
 import com.servicecall.app.R;
+import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseFragment;
 import com.servicecall.app.data.api.DataApi;
 import com.servicecall.app.event.ComplaintSaveResponseEvent;
@@ -57,6 +58,19 @@ public class AddDetailsFragment extends BaseFragment {
 
     public AddDetailsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ServiceCallApplication.getApplication().getComponent().inject(this);
+        eventBus.register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        eventBus.unregister(this);
+        super.onDestroy();
     }
 
     @Override

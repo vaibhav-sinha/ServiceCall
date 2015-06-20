@@ -5,5 +5,5 @@ package com.servicecall.app.config;
  */
 public class Constants {
 
-    public static final String COMPLAINTS_POST_URL = "";
+    public static final String COMPLAINTS_POST_URL = "http://demo5303989.mockable.io/submit";
 }

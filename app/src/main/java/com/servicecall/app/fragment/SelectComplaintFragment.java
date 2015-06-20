@@ -16,6 +16,7 @@ import com.eswaraj.web.dto.CategoryWithChildCategoryDto;
 import com.servicecall.app.R;
 import com.servicecall.app.adapter.CategoryListAdapter;
 import com.servicecall.app.adapter.TemplateListAdapter;
+import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseFragment;
 import com.servicecall.app.event.ComplaintSelectEvent;
 import com.servicecall.app.event.SubCategorySelectEvent;
@@ -38,17 +39,22 @@ public class SelectComplaintFragment extends BaseFragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ServiceCallApplication.getApplication().getComponent().inject(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_select_complaint, container, false);
         ButterKnife.inject(this, rootView);
         categoryWithChildCategoryDto = (CategoryWithChildCategoryDto) getActivity().getIntent().getSerializableExtra("complaintList");
-        int drawableResourceId = getActivity().getResources().getIdentifier(categoryWithChildCategoryDto.getImageUrl(), "drawable", getActivity().getPackageName());
+        //int drawableResourceId = getActivity().getResources().getIdentifier(categoryWithChildCategoryDto.getImageUrl(), "drawable", getActivity().getPackageName());
         //TODO: Fix this
         //headerImage.setImageDrawable(getActivity().getResources().getDrawable(drawableResourceId));
         selectedCategoryName.setText(categoryWithChildCategoryDto.getName());
-        TemplateListAdapter amenityListAdapter = new TemplateListAdapter(getActivity(), R.layout.item_category_list, categoryWithChildCategoryDto.getChildCategories());
+        TemplateListAdapter amenityListAdapter = new TemplateListAdapter(getActivity(), R.layout.item_template_list, categoryWithChildCategoryDto.getChildCategories());
         lvAmenityList.setAdapter(amenityListAdapter);
         lvAmenityList.setOnItemClickListener(new GridView.OnItemClickListener() {
             @Override

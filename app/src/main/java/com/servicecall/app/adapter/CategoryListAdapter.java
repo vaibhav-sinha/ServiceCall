@@ -69,7 +69,7 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryWithChildCategoryD
         }
 
         CategoryWithChildCategoryDto categoryDto = categoryList.get(position);
-        int drawableResourceId = context.getResources().getIdentifier(categoryDto.getImageUrl(), "drawable", context.getPackageName());
+        //int drawableResourceId = context.getResources().getIdentifier(categoryDto.getImageUrl(), "drawable", context.getPackageName());
         holder.saTitle.setText(categoryDto.getName());
         //TODO: Fix this
         //holder.saIcon.setImageDrawable(context.getResources().getDrawable(drawableResourceId));

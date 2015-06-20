@@ -13,6 +13,9 @@ import com.servicecall.app.R;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * Created by Vaibhav on 6/15/2015.
  */
@@ -38,10 +41,7 @@ public class TemplateListAdapter extends ArrayAdapter<CategoryWithChildCategoryD
         {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
-
-            holder = new CategoryDtoHolder();
-            holder.stTitle = (TextView)row.findViewById(R.id.scom_tv_name);
-
+            holder = new CategoryDtoHolder(row);
             row.setTag(holder);
         }
         else
@@ -57,7 +57,12 @@ public class TemplateListAdapter extends ArrayAdapter<CategoryWithChildCategoryD
 
     static class CategoryDtoHolder
     {
+        @InjectView(R.id.scom_tv_name)
         TextView stTitle;
+
+        public CategoryDtoHolder(View view) {
+            ButterKnife.inject(this, view);
+        }
     }
 }
 

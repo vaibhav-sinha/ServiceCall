@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.config.Constants;
 import com.servicecall.app.data.requests.volley.GenericPostVolleyRequest;
+import com.servicecall.app.event.ComplaintSaveResponseEvent;
 import com.servicecall.app.event.ComplaintSavedEvent;
 import com.servicecall.app.model.Complaint;
 import com.servicecall.app.model.ComplaintSaveResponse;
@@ -46,7 +47,7 @@ public class ComplaintsPostRequest {
             @Override
             public void onResponse(String response) {
                 ComplaintSaveResponse complaintSaveResponse = new Gson().fromJson(response, ComplaintSaveResponse.class);
-                ComplaintSavedEvent event = new ComplaintSavedEvent();
+                ComplaintSaveResponseEvent event = new ComplaintSaveResponseEvent();
                 if(complaintSaveResponse == null || complaintSaveResponse.getError()) {
                     event.setSuccess(false);
                 }
