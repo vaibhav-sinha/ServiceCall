@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.eswaraj.web.dto.CategoryWithChildCategoryDto;
 import com.servicecall.app.R;
 import com.servicecall.app.base.BaseFragment;
+import com.servicecall.app.data.api.DataApi;
 import com.servicecall.app.event.ComplaintSaveResponseEvent;
 import com.servicecall.app.event.ComplaintSubmitOrDiscardEvent;
 import com.servicecall.app.model.Complaint;
@@ -34,6 +35,8 @@ public class AddDetailsFragment extends BaseFragment {
 
     @Inject
     Session session;
+    @Inject
+    DataApi dataApi;
 
     SweetAlertDialog pDialog;
 
@@ -128,7 +131,7 @@ public class AddDetailsFragment extends BaseFragment {
     }
 
     private void submitComplaints() {
-        //TODO: Do the network call here to post the complaints to the server
+        dataApi.postComplaints(getActivity(), session.getComplaints());
     }
 
     private void sendEvent() {

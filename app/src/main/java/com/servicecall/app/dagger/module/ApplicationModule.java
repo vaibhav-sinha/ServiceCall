@@ -5,7 +5,12 @@ import android.content.Context;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.servicecall.app.application.ServiceCallApplication;
+import com.servicecall.app.data.api.DataApi;
+import com.servicecall.app.data.datastore.Server;
+import com.servicecall.app.data.datastore.ServerImpl;
+import com.servicecall.app.data.requests.ComplaintsPostRequest;
 import com.servicecall.app.util.LocationUtil;
+import com.servicecall.app.util.NetworkAccessHelper;
 import com.servicecall.app.util.Session;
 
 import javax.inject.Singleton;
@@ -47,6 +52,12 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
+    NetworkAccessHelper provideNetworkAccessHelper() {
+        return new NetworkAccessHelper();
+    }
+
+    @Provides
+    @Singleton
     LocationUtil provideLocationUtil() {
         return new LocationUtil();
     }
@@ -55,5 +66,23 @@ public class ApplicationModule {
     @Singleton
     Session provideSession() {
         return new Session();
+    }
+
+    @Provides
+    @Singleton
+    DataApi provideDataApi() {
+        return new DataApi();
+    }
+
+    @Provides
+    @Singleton
+    Server provideServer() {
+        return new ServerImpl();
+    }
+
+    @Provides
+    @Singleton
+    ComplaintsPostRequest provideComplaintsPostRequest() {
+        return new ComplaintsPostRequest();
     }
 }
