@@ -9,6 +9,7 @@ import com.servicecall.app.data.api.DataApi;
 import com.servicecall.app.data.datastore.Server;
 import com.servicecall.app.data.datastore.ServerImpl;
 import com.servicecall.app.data.requests.ComplaintsPostRequest;
+import com.servicecall.app.data.requests.LoadCategoriesDataRequest;
 import com.servicecall.app.util.LocationUtil;
 import com.servicecall.app.util.NetworkAccessHelper;
 import com.servicecall.app.util.Session;
@@ -84,5 +85,11 @@ public class ApplicationModule {
     @Singleton
     ComplaintsPostRequest provideComplaintsPostRequest() {
         return new ComplaintsPostRequest();
+    }
+
+    @Provides
+    @Singleton
+    LoadCategoriesDataRequest provideLoadCategoriesDataRequest() {
+        return new LoadCategoriesDataRequest();
     }
 }

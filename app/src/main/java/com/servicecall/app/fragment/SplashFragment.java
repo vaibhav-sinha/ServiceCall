@@ -12,15 +12,21 @@ import com.servicecall.app.R;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseFragment;
 import com.servicecall.app.config.LocalData;
+import com.servicecall.app.data.api.DataApi;
+import com.servicecall.app.event.GetCategoriesDataEvent;
 import com.servicecall.app.event.SetupDoneEvent;
 import com.servicecall.app.util.Session;
 
 import javax.inject.Inject;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class SplashFragment extends BaseFragment {
 
     @Inject
     Session session;
+    @Inject
+    DataApi dataApi;
 
     public SplashFragment() {
         // Required empty public constructor
@@ -31,6 +37,8 @@ public class SplashFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         ServiceCallApplication.getApplication().getComponent().inject(this);
         eventBus.register(this);
+        dataApi.loadCategoriesData(getActivity());
+
     }
 
     @Override
@@ -45,7 +53,7 @@ public class SplashFragment extends BaseFragment {
         return rootView;
     }
 
-    @Override
+    /*@Override
     public void onStart() {
         super.onStart();
         session.setCategoryWithChildCategoryDtoList(LocalData.getCategoryData());
@@ -61,5 +69,20 @@ public class SplashFragment extends BaseFragment {
 
         Handler handler = new Handler();
         handler.postDelayed(setupDoneEventSender, 3000);
+    }*/
+
+    public void onEventMainThread(GetCategoriesDataEvent event) {
+        if(event.isSuccess()) {
+            session.setCategoryWithChildCategoryDtoList(event.getCategoryWithChildCategoryDtoList());
+            SetupDoneEvent eventToSend = new SetupDoneEvent();
+            eventToSend.setSuccess(true);
+            eventBus.post(eventToSend);
+        }
+        else {
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Oops...")
+                    .setContentText("Could not get app setup data from internet. Check if your internet connection works")
+                    .show();
+        }
     }
 }

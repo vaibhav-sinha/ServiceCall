@@ -10,6 +10,7 @@ import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.dagger.module.ApplicationModule;
 import com.servicecall.app.data.api.DataApi;
 import com.servicecall.app.data.requests.ComplaintsPostRequest;
+import com.servicecall.app.data.requests.LoadCategoriesDataRequest;
 import com.servicecall.app.fragment.AddDetailsFragment;
 import com.servicecall.app.fragment.GoogleMapFragment;
 import com.servicecall.app.fragment.HomeActivityFragment;
@@ -54,4 +55,5 @@ public interface ApplicationComponent {
     void inject(ServerImpl server);
     void inject(DataApi dataApi);
     void inject(ComplaintsPostRequest request);
+    void inject(LoadCategoriesDataRequest request);
 }

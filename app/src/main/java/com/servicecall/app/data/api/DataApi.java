@@ -13,7 +13,7 @@ import javax.inject.Inject;
 /**
  * Created by Vaibhav on 6/20/2015.
  */
-public class DataApi implements NetworkPostApi {
+public class DataApi implements NetworkPostApi, NetworkGetApi {
 
     @Inject
     ServerImpl server;
@@ -25,5 +25,10 @@ public class DataApi implements NetworkPostApi {
     @Override
     public void postComplaints(Context context, List<Complaint> complaintList) {
         server.postComplaints(context, complaintList);
+    }
+
+    @Override
+    public void loadCategoriesData(Context context) {
+        server.loadCategoriesData(context);
     }
 }
