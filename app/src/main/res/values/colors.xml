@@ -28,7 +28,7 @@
     <color name="dark_orangeRed">#DE4427</color>
     <color name="dark_grey_green">#ff81af64</color>
     <color name="light_grey_green">#AFAF77</color>
-
+    <color name="actionBarBg">#538195</color>
 
     <array name="rainbow">
         <item>@color/red</item>

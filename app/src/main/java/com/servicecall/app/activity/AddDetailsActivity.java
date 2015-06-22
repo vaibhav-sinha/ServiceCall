@@ -1,9 +1,11 @@
 package com.servicecall.app.activity;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.servicecall.app.R;
@@ -42,6 +44,13 @@ public class AddDetailsActivity extends BaseActivity {
             Intent i = new Intent(this, SelectCategoryActivity.class);
             startActivity(i);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_home, menu);
+        return true;
     }
 
 }

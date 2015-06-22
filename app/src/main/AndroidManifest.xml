@@ -28,10 +28,14 @@
 
         <activity
             android:name=".activity.HomeActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".activity.SplashActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_splash" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,11 +45,17 @@
         </activity>
         <activity
             android:name=".activity.SelectCategoryActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden"
             android:label="@string/title_activity_select_category" >
         </activity>
         <activity
             android:name=".activity.SelectSubCategoryActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_select_sub_category"
+            android:windowSoftInputMode="adjustPan|stateHidden"
             android:parentActivityName=".activity.SelectCategoryActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -53,10 +63,15 @@
         </activity>
         <activity
             android:name=".activity.SelectComplaintActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden"
             android:label="@string/title_activity_select_complaint" >
         </activity>
         <activity
             android:name=".activity.AddDetailsActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_add_details"
             android:parentActivityName=".activity.SelectComplaintActivity" >
             <meta-data

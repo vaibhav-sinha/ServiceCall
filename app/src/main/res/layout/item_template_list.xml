@@ -7,9 +7,45 @@
     android:gravity="center_vertical"
     android:background="@color/white">
 
-    <TextView
-        android:id="@+id/scom_tv_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:background="@drawable/left_border"
+        >
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.1"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            >
+            <TextView android:id="@+id/scom_tv_name"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="left|center_vertical"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:textColor="#929292"
+                android:maxLines="2"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:autoText="false"
+                />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/forward"
+            android:layout_weight="0.9"
+            android:layout_gravity="center"
+            android:adjustViewBounds="false" />
+    </LinearLayout>
 </LinearLayout>

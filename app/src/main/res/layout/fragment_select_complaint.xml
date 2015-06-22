@@ -2,12 +2,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="0dp"
-        android:background="@color/white"
+        android:background="#dbdbdb"
         android:focusableInTouchMode="true">
 
         <ImageView
@@ -36,7 +36,12 @@
             android:numColumns="2"
             android:verticalSpacing="10dp"
             android:horizontalSpacing="10dp"
-            android:layout_margin="10dp">
+            android:layout_margin="10dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10dip"
+            android:cacheColorHint="@android:color/transparent"
+            android:drawSelectorOnTop="true"
+            >
         </com.servicecall.app.widget.NonScrollableListView>
 
     </LinearLayout>

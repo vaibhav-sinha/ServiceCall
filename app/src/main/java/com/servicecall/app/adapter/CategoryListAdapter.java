@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eswaraj.web.dto.CategoryWithChildCategoryDto;
 import com.servicecall.app.R;
@@ -69,14 +70,76 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryWithChildCategoryD
         }
 
         CategoryWithChildCategoryDto categoryDto = categoryList.get(position);
-        //int drawableResourceId = context.getResources().getIdentifier(categoryDto.getImageUrl(), "drawable", context.getPackageName());
+        String imageTitle = categoryDto.getImageUrl().split("\\.")[0];
+        int drawableResourceId = context.getResources().getIdentifier(imageTitle, "drawable", context.getPackageName());
         holder.saTitle.setText(categoryDto.getName());
         //TODO: Fix this
-        //holder.saIcon.setImageDrawable(context.getResources().getDrawable(drawableResourceId));
+        try {
+            holder.saIcon.setImageDrawable(context.getResources().getDrawable(drawableResourceId));
+        } catch (Exception e){
+            holder.saIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.category4));
+        }
         if (categoryDto.getColor() != null) {
-            holder.saWrapper.setBackgroundColor(Color.parseColor("#" + categoryDto.getColor()));
+            //holder.saWrapper.setBackgroundColor(Color.parseColor("#" + categoryDto.getColor()));
+            switch (categoryDto.getId().intValue()){
+                case 0:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#ED6F6A"));
+                    break;
+                case 1:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#44A3C8"));
+                    break;
+                case 2:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#CB9416"));
+                    break;
+                case 3:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#5A8658"));
+                    break;
+                case 4:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#986E84"));
+                    break;
+                case 5:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#FF496C"));
+                    break;
+                case 6:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#538195"));
+                    break;
+                case 7:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#FB8F3C"));
+                    break;
+                case 8:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#BBAA33"));
+                    break;
+                case 9:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#8C97F0"));
+                    break;
+                case 10:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#44A3C8"));
+                    break;
+                case 11:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#ED6F6A"));
+                    break;
+                case 12:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#5A8658"));
+                    break;
+                case 13:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#CB9416"));
+                    break;
+                case 14:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#FF496C"));
+                    break;
+                case 15:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#986E84"));
+                    break;
+                case 16:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#FB8F3C"));
+                    break;
+                default:
+                    holder.saWrapper.setBackgroundColor(Color.parseColor("#B39F48"));
+                    break;
+            }
         } else {
-            holder.saWrapper.setBackgroundColor(colorMap.get(categoryDto.getId()));
+            //holder.saWrapper.setBackgroundColor(colorMap.get(categoryDto.getId()));
+            holder.saWrapper.setBackgroundColor(Color.parseColor("#0099cc"));
         }
         if(complaintCounterList != null) {
             for(ComplaintCounter complaintCounter : complaintCounterList) {

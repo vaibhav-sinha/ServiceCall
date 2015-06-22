@@ -1,6 +1,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".HomeActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/menu_home"
+        android:icon="@drawable/icn_home"
+        android:title="Home"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_past_complaints"
+        android:icon="@drawable/icn_raised_issues"
+        android:title="Old Issues"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/menu_aboutus"
+        android:icon="@drawable/icn_about_us"
+        android:title="About Us"
+        app:showAsAction="never" />
+
 </menu>

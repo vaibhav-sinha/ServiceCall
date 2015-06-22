@@ -6,8 +6,8 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_select_category">SelectCategoryActivity</string>
-    <string name="title_activity_select_sub_category">SelectSubCategoryActivity</string>
-    <string name="title_activity_select_complaint">SelectComplaintActivity</string>
-    <string name="title_activity_add_details">AddDetailsActivity</string>
+    <string name="title_activity_select_category">Select Category</string>
+    <string name="title_activity_select_sub_category">Select SubCategory</string>
+    <string name="title_activity_select_complaint">Select Complaint</string>
+    <string name="title_activity_add_details">Add Details</string>
 </resources>
