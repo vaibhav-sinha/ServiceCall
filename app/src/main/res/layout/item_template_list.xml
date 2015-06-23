@@ -13,15 +13,22 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="1"
-        android:background="@drawable/left_border"
+        android:weightSum="2"
         >
+
+        <TextView android:id="@+id/scom_tv_filler"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="left|center_vertical"
+            android:background="#009ccc"
+            android:layout_weight="0.98"
+            />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="0.1"
+            android:layout_weight="0.12"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             >

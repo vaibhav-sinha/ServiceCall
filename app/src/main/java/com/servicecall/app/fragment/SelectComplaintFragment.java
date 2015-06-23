@@ -3,7 +3,6 @@ package com.servicecall.app.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +14,10 @@ import android.widget.TextView;
 
 import com.eswaraj.web.dto.CategoryWithChildCategoryDto;
 import com.servicecall.app.R;
-import com.servicecall.app.adapter.CategoryListAdapter;
 import com.servicecall.app.adapter.TemplateListAdapter;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseFragment;
 import com.servicecall.app.event.ComplaintSelectEvent;
-import com.servicecall.app.event.SubCategorySelectEvent;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

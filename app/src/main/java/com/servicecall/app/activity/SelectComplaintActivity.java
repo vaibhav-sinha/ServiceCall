@@ -1,16 +1,14 @@
 package com.servicecall.app.activity;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 
+import com.eswaraj.web.dto.CategoryWithChildCategoryDto;
 import com.servicecall.app.R;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseActivity;
 import com.servicecall.app.event.ComplaintSelectEvent;
-import com.servicecall.app.event.SubCategorySelectEvent;
 import com.servicecall.app.fragment.SelectComplaintFragment;
 
 import butterknife.ButterKnife;
@@ -41,6 +39,8 @@ public class SelectComplaintActivity extends BaseActivity {
         if(event.isSuccess()) {
             Intent i = new Intent(this, AddDetailsActivity.class);
             i.putExtra("complaint", event.getCategoryWithChildCategoryDto());
+            CategoryWithChildCategoryDto parentCategory = (CategoryWithChildCategoryDto) getIntent().getSerializableExtra("complaintList");
+            i.putExtra("complaintParentCategory", parentCategory);
             startActivity(i);
         }
     }

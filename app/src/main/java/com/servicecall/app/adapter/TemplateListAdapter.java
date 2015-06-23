@@ -2,6 +2,7 @@ package com.servicecall.app.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,14 @@ public class TemplateListAdapter extends ArrayAdapter<CategoryWithChildCategoryD
         CategoryWithChildCategoryDto categoryDto = templateList.get(position);
         holder.stTitle.setText(categoryDto.getName());
 
+        CategoryWithChildCategoryDto categoryWithChildCategoryDto = (CategoryWithChildCategoryDto) ((Activity)context).getIntent().getSerializableExtra("complaintList");
+
+        try {
+            holder.leftFiller.setBackgroundColor(Color.parseColor("#" + categoryWithChildCategoryDto.getColor()));
+        } catch (Exception e){
+            holder.leftFiller.setBackgroundColor(Color.parseColor("#0099cc"));
+        }
+
         return row;
     }
 
@@ -59,6 +68,10 @@ public class TemplateListAdapter extends ArrayAdapter<CategoryWithChildCategoryD
     {
         @InjectView(R.id.scom_tv_name)
         TextView stTitle;
+
+        @InjectView(R.id.scom_tv_filler)
+        TextView leftFiller;
+
 
         public CategoryDtoHolder(View view) {
             ButterKnife.inject(this, view);

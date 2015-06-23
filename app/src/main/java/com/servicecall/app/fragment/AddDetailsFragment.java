@@ -3,6 +3,7 @@ package com.servicecall.app.fragment;
 
 import android.graphics.Color;
 import android.graphics.drawable.StateListDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,7 @@ public class AddDetailsFragment extends BaseFragment {
     SweetAlertDialog pDialog;
 
     private CategoryWithChildCategoryDto categoryWithChildCategoryDto;
-    private CategoryWithChildCategoryDto parentCategoryName;
+    private CategoryWithChildCategoryDto parentCategoryDto;
 
     @InjectView(R.id.adSelected)
     TextView complaintName;
@@ -53,7 +54,7 @@ public class AddDetailsFragment extends BaseFragment {
     Spinner count;
     @InjectView(R.id.ad_b_another)
     Button another;
-    @InjectView(R.id.ad_b_submit)
+    @InjectView(R.id.ad_b_basket)
     Button submit;
     @InjectView(R.id.ad_b_discard)
     Button discard;
@@ -83,9 +84,9 @@ public class AddDetailsFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_add_details, container, false);
         ButterKnife.inject(this, rootView);
         categoryWithChildCategoryDto = (CategoryWithChildCategoryDto) getActivity().getIntent().getSerializableExtra("complaint");
-        //parentCategoryName = (CategoryWithChildCategoryDto) getActivity().getIntent().getSerializableExtra("subCategory");
+        parentCategoryDto = (CategoryWithChildCategoryDto) getActivity().getIntent().getSerializableExtra("complaintParentCategory");
         complaintName.setText(categoryWithChildCategoryDto.getName());
-        //issueCategory.setText(parentCategoryName.getName());
+        issueCategory.setText(parentCategoryDto.getName());
         //Initial state
 
         if(session.getComplaints().size() > 1) {
@@ -111,19 +112,29 @@ public class AddDetailsFragment extends BaseFragment {
                     getActivity().getResources().getDrawable(colorIdPressed));
             states.addState(new int[] {},
                     getActivity().getResources().getDrawable(colorId));
-            if(hexCodeVal.contentEquals("7B9FAD")) {
-                submit.setBackground(states);
-            } else if (hexCodeVal.contentEquals("90BBC9")) {
-                another.setBackground(states);
-            } else if (hexCodeVal.contentEquals("DBDBDB")) {
-                discard.setBackground(states);
+            if(Build.VERSION.SDK_INT >= 16) {
+                if(hexCodeVal.contentEquals("7B9FAD")) {
+                    submit.setBackground(states);
+                } else if (hexCodeVal.contentEquals("90BBC9")) {
+                    another.setBackground(states);
+                } else if (hexCodeVal.contentEquals("DBDBDB")) {
+                    discard.setBackground(states);
+                }
+            } else {
+                if(hexCodeVal.contentEquals("7B9FAD")) {
+                    submit.setBackgroundDrawable(states);
+                } else if (hexCodeVal.contentEquals("90BBC9")) {
+                    another.setBackgroundDrawable(states);
+                } else if (hexCodeVal.contentEquals("DBDBDB")) {
+                    discard.setBackgroundDrawable(states);
+                }
             }
         }
 
         return rootView;
     }
 
-    @OnClick(R.id.ad_b_submit)
+    @OnClick(R.id.ad_b_basket)
     public void onSubmit() {
         if(session.getLatitude() != null) {
             addComplaintToSession();

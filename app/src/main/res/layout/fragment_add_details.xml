@@ -208,8 +208,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginTop="20dp">
         <Button
-            android:id="@+id/ad_b_submit"
-            android:text="Submit"
+            android:id="@+id/ad_b_basket"
+            android:text="+Basket"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:drawableTop="@drawable/submit"
@@ -218,7 +218,7 @@
             android:textColor="#FFFFFF"
             android:padding="10dp"
             android:drawSelectorOnTop="true"
-            />
+            android:textStyle="bold" />
         <Button
             android:id="@+id/ad_b_another"
             android:text="Add another"
@@ -230,7 +230,7 @@
             android:textColor="#FFFFFF"
             android:padding="10dp"
             android:drawSelectorOnTop="true"
-            />
+            android:textStyle="bold" />
         <Button
             android:id="@+id/ad_b_discard"
             android:text="Discard"
@@ -242,7 +242,7 @@
             android:textColor="#707070"
             android:padding="10dp"
             android:drawSelectorOnTop="true"
-            />
+            android:textStyle="bold" />
     </LinearLayout>
 
 </RelativeLayout>
