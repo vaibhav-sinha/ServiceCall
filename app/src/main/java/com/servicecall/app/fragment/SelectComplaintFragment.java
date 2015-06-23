@@ -1,6 +1,7 @@
 package com.servicecall.app.fragment;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -50,10 +51,18 @@ public class SelectComplaintFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_select_complaint, container, false);
         ButterKnife.inject(this, rootView);
         categoryWithChildCategoryDto = (CategoryWithChildCategoryDto) getActivity().getIntent().getSerializableExtra("complaintList");
-        //int drawableResourceId = getActivity().getResources().getIdentifier(categoryWithChildCategoryDto.getImageUrl(), "drawable", getActivity().getPackageName());
-        //TODO: Fix this
-        //headerImage.setImageDrawable(getActivity().getResources().getDrawable(drawableResourceId));
         selectedCategoryName.setText(categoryWithChildCategoryDto.getName());
+
+        int drawableResourceId = getActivity().getResources().getIdentifier(categoryWithChildCategoryDto.getImageUrl().split("\\.")[0], "drawable", getActivity().getPackageName());
+
+        try {
+            headerImage.setImageDrawable(getActivity().getResources().getDrawable(drawableResourceId));
+            headerImage.setBackgroundColor(Color.parseColor("#" + categoryWithChildCategoryDto.getColor()));
+        } catch (Exception e){
+            headerImage.setBackgroundColor(Color.parseColor("#0099cc"));
+            headerImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.category4));
+        }
+
         TemplateListAdapter amenityListAdapter = new TemplateListAdapter(getActivity(), R.layout.item_template_list, categoryWithChildCategoryDto.getChildCategories());
         lvAmenityList.setAdapter(amenityListAdapter);
         lvAmenityList.setOnItemClickListener(new GridView.OnItemClickListener() {

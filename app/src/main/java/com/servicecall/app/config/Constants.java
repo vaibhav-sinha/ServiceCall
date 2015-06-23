@@ -6,5 +6,5 @@ package com.servicecall.app.config;
 public class Constants {
 
     public static final String COMPLAINTS_POST_URL = "http://demo5303989.mockable.io/submit";
-    public static final String GET_CATEGORIES_URL = "http://www.json-generator.com/api/json/get/ckPEuXLqsy?indent=2";
+    public static final String GET_CATEGORIES_URL = "http://www.json-generator.com/api/json/get/cpsgEznlGq?indent=2";
 }

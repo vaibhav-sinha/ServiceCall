@@ -1,6 +1,7 @@
 package com.servicecall.app.fragment;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -54,9 +55,16 @@ public class SelectSubCategoryFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_select_sub_category, container, false);
         ButterKnife.inject(this, rootView);
         categoryWithChildCategoryDto = (CategoryWithChildCategoryDto) getActivity().getIntent().getSerializableExtra("subCategory");
-        int drawableResourceId = getActivity().getResources().getIdentifier(categoryWithChildCategoryDto.getImageUrl(), "drawable", getActivity().getPackageName());
-        //TODO: Fix this
-        //headerImage.setImageDrawable(getActivity().getResources().getDrawable(drawableResourceId));
+        int drawableResourceId = getActivity().getResources().getIdentifier(categoryWithChildCategoryDto.getImageUrl().split("\\.")[0], "drawable", getActivity().getPackageName());
+
+        try {
+            headerImage.setImageDrawable(getActivity().getResources().getDrawable(drawableResourceId));
+            headerImage.setBackgroundColor(Color.parseColor("#" + categoryWithChildCategoryDto.getColor()));
+        } catch (Exception e){
+            headerImage.setBackgroundColor(Color.parseColor("#0099cc"));
+            headerImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.category4));
+        }
+
         selectedCategoryName.setText(categoryWithChildCategoryDto.getName());
         CategoryListAdapter amenityListAdapter = new CategoryListAdapter(getActivity(), R.layout.item_category_list, categoryWithChildCategoryDto.getChildCategories(), null, null);
         gvAmenityList.setAdapter(amenityListAdapter);

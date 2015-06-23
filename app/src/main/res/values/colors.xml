@@ -30,6 +30,27 @@
     <color name="light_grey_green">#AFAF77</color>
     <color name="actionBarBg">#538195</color>
 
+    <color name="n_ed6f6a_n">#ED6F6A</color>
+    <color name="p_ed6f6a_p">#ed5447</color>
+    <color name="n_44a3c8_n">#44A3C8</color>
+    <color name="p_44a3c8_p">#0989c8</color>
+    <color name="n_cb9416_n">#CB9416</color>
+    <color name="p_cb9416_p">#cb7f0a</color>
+    <color name="n_5a8658_n">#5A8658</color>
+    <color name="p_5a8658_p">#09860b</color>
+    <color name="n_986f84_n">#986f84</color>
+    <color name="p_986f84_p">#98404d</color>
+    <color name="n_ff496c_n">#FF496C</color>
+    <color name="p_ff496c_p">#ff334f</color>
+    <color name="n_538195_n">#538195</color>
+    <color name="p_538195_p">#207295</color>
+    <color name="n_fb8f3c_n">#FB8F3C</color>
+    <color name="p_fb8f3c_p">#fb8225</color>
+    <color name="n_afaf77_n">#AFAF77</color>
+    <color name="p_afaf77_p">#aeaf46</color>
+    <color name="n_8c97f0_n">#8C97F0</color>
+    <color name="p_8c97f0_p">#7b8af0</color>
+
     <array name="rainbow">
         <item>@color/red</item>
         <item>@color/orange</item>

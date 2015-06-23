@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:drawSelectorOnTop="true"
+    android:background="#f1f1f1">
 
 
     <TextView android:id="@+id/sc_tv_stats"
@@ -21,7 +23,7 @@
         android:id="@+id/sc_rl_wrapper"
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="85dp"
+        android:layout_height="90dp"
         android:layout_gravity="fill"
         android:layout_rowSpan="2">
 
@@ -41,7 +43,8 @@
             android:textSize="12sp"
             android:textColor="@color/white"
             android:maxLines="1"
-            android:layout_marginTop="60dp" />
+            android:layout_marginTop="65dp"
+            android:paddingTop="5dp" />
 
     </RelativeLayout>
 
