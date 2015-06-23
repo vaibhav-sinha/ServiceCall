@@ -51,6 +51,13 @@
     <color name="n_8c97f0_n">#8C97F0</color>
     <color name="p_8c97f0_p">#7b8af0</color>
 
+    <color name="n_7b9fad_n">#7B9FAD</color>
+    <color name="p_7b9fad_p">#5d92ad</color>
+    <color name="n_90bbc9_n">#90BBC9</color>
+    <color name="p_90bbc9_p">#59a3c9</color>
+    <color name="n_dbdbdb_n">#DBDBDB</color>
+    <color name="p_dbdbdb_p">#a3a3a3</color>
+
     <array name="rainbow">
         <item>@color/red</item>
         <item>@color/orange</item>

@@ -2,8 +2,8 @@ package com.servicecall.app.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.net.Uri;
+import android.graphics.drawable.StateListDrawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.eswaraj.web.dto.CategoryWithChildCategoryDto;
 import com.servicecall.app.R;
@@ -23,7 +22,6 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import android.graphics.drawable.StateListDrawable;
 
 /**
  * Created by Vaibhav on 6/14/2015.
@@ -84,7 +82,11 @@ public class CategoryListAdapter extends ArrayAdapter<CategoryWithChildCategoryD
                     context.getResources().getDrawable(colorIdPressed));
             states.addState(new int[] {},
                     context.getResources().getDrawable(colorId));
-            holder.saIcon.setBackground(states);
+            if(Build.VERSION.SDK_INT >= 16) {
+                holder.saIcon.setBackground(states);
+            } else {
+                holder.saIcon.setBackgroundDrawable(states);
+            }
             //holder.saIcon.setBackgroundColor(Color.parseColor("#" + categoryDto.getColor()));
         } catch (Exception e){
             //holder.saIcon.setBackgroundColor(Color.parseColor("#0099cc"));

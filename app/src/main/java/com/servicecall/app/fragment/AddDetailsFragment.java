@@ -2,12 +2,11 @@ package com.servicecall.app.fragment;
 
 
 import android.graphics.Color;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,10 +41,13 @@ public class AddDetailsFragment extends BaseFragment {
     SweetAlertDialog pDialog;
 
     private CategoryWithChildCategoryDto categoryWithChildCategoryDto;
+    private CategoryWithChildCategoryDto parentCategoryName;
 
-    @InjectView(R.id.ad_tv_complaint)
+    @InjectView(R.id.adSelected)
     TextView complaintName;
-    @InjectView(R.id.ad_tv_description)
+    @InjectView(R.id.adAmenity)
+    TextView issueCategory;
+    @InjectView(R.id.adDescription)
     EditText description;
     @InjectView(R.id.ad_s_count)
     Spinner count;
@@ -55,6 +57,9 @@ public class AddDetailsFragment extends BaseFragment {
     Button submit;
     @InjectView(R.id.ad_b_discard)
     Button discard;
+
+    int colorId;
+    int colorIdPressed;
 
     public AddDetailsFragment() {
         // Required empty public constructor
@@ -78,7 +83,11 @@ public class AddDetailsFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_add_details, container, false);
         ButterKnife.inject(this, rootView);
         categoryWithChildCategoryDto = (CategoryWithChildCategoryDto) getActivity().getIntent().getSerializableExtra("complaint");
+        //parentCategoryName = (CategoryWithChildCategoryDto) getActivity().getIntent().getSerializableExtra("subCategory");
         complaintName.setText(categoryWithChildCategoryDto.getName());
+        //issueCategory.setText(parentCategoryName.getName());
+        //Initial state
+
         if(session.getComplaints().size() > 1) {
             submit.setText("Submit all");
             discard.setText("Discard all");
@@ -88,8 +97,28 @@ public class AddDetailsFragment extends BaseFragment {
             discard.setText("Discard");
         }
         final Integer[] items = new Integer[]{1,2,3,4,5,6,7,8,9,10};
-        ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(getActivity(),android.R.layout.simple_spinner_item, items);
+        ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(getActivity(),R.layout.item_spinner, items);
         count.setAdapter(adapter);
+
+        final String[] colorHexCode = new String[]{"7B9FAD","90BBC9","DBDBDB"};
+        for(String hexCodeVal : colorHexCode ) {
+            colorId = getActivity().getResources().getIdentifier("n_" + hexCodeVal.toLowerCase() + "_n", "color", getActivity().getPackageName());
+            colorIdPressed = getActivity().getResources().getIdentifier("p_" + hexCodeVal.toLowerCase() + "_p", "color", getActivity().getPackageName());
+            StateListDrawable states = new StateListDrawable();
+            states.addState(new int[] {android.R.attr.state_pressed},
+                    getActivity().getResources().getDrawable(colorIdPressed));
+            states.addState(new int[] {android.R.attr.state_focused},
+                    getActivity().getResources().getDrawable(colorIdPressed));
+            states.addState(new int[] {},
+                    getActivity().getResources().getDrawable(colorId));
+            if(hexCodeVal.contentEquals("7B9FAD")) {
+                submit.setBackground(states);
+            } else if (hexCodeVal.contentEquals("90BBC9")) {
+                another.setBackground(states);
+            } else if (hexCodeVal.contentEquals("DBDBDB")) {
+                discard.setBackground(states);
+            }
+        }
 
         return rootView;
     }

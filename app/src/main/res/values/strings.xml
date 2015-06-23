@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ServiceCall</string>
+    <string name="app_name">Interfinder</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_splash">Northgate Information Solutions</string>
@@ -10,4 +10,14 @@
     <string name="title_activity_select_sub_category">Select SubCategory</string>
     <string name="title_activity_select_complaint">Select Complaint</string>
     <string name="title_activity_add_details">Add Details</string>
+
+    <string name="adAmenityTypeLabel">Issue Category</string>
+    <string name="adCountLabel">Quantity</string>
+    <string name="adAmenity">Water</string>
+    <string name="adIssueLabel">My Issue</string>
+    <string name="adIssueType">No Water at home</string>
+    <string name="adDescLabel">Description</string>
+    <string name="adEnterDescLabel">(Please enter a brief description of the issue)</string>
+    <string name="adAddDescLabel">Add Description</string>
+
 </resources>
