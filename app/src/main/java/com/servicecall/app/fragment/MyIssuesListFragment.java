@@ -64,9 +64,6 @@ public class MyIssuesListFragment extends Fragment{
                 false);
         findViewsById(view);
 
-        GetEmpTask task = new GetEmpTask(activity);
-        task.execute((Void) null);
-
         return view;
     }
 
@@ -79,7 +76,6 @@ public class MyIssuesListFragment extends Fragment{
         myIssuesCount = (TextView ) footer.findViewById(R.id.basketComplaintsCount);
 
         placeOrder.setText("New Complaint");
-        placeOrder.setCompoundDrawablesWithIntrinsicBounds(R.drawable.add_another,0,0,0);
         placeOrder.setOnClickListener(new View.OnClickListener() {
                                           public void onClick(View view) {
 

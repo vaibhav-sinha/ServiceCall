@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:background="@color/white">
+    android:background="#f2f2f2">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:layout_margin="5dp">
 
         <TextView
             android:layout_width="fill_parent"
@@ -33,7 +33,9 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="@color/white"
+                android:padding="5dp">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -42,7 +44,9 @@
                     android:text="Occupant Type"
                     android:padding="5dp"
                     android:layout_weight="0.5"
-                    android:gravity="center_vertical" />
+                    android:textColor="#0099cc"
+                    android:gravity="center_vertical"
+                    android:textSize="14sp" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -64,7 +68,9 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="@color/white"
+                android:padding="5dp">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -73,7 +79,9 @@
                     android:text="Property Type"
                     android:padding="5dp"
                     android:layout_weight="0.5"
-                    android:gravity="center_vertical" />
+                    android:textColor="#0099cc"
+                    android:gravity="center_vertical"
+                    android:textSize="14sp" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -92,6 +100,13 @@
                 </LinearLayout>
             </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:layout_marginTop="5dp"
+                    android:padding="5dp">
             <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -103,15 +118,16 @@
                 android:id="@+id/etUserNameLabel"
                 android:text="Name"
                 android:padding="5dp"
-                android:visibility="invisible"
-                android:layout_marginBottom="-5dp" />
+                android:textColor="#0099cc"
+                android:layout_marginBottom="-5dp"
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/etUserName"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:hint="Name">
+                android:textSize="14sp">
             </EditText>
 
         </LinearLayout>
@@ -127,15 +143,16 @@
                 android:id="@+id/etAddressLabel"
                 android:text="Address"
                 android:padding="5dp"
-                android:visibility="invisible"
-                android:layout_marginBottom="-5dp" />
+                android:textColor="#0099cc"
+                android:layout_marginBottom="-5dp"
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/etAddressName"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:hint="Address">
+                android:textSize="14sp">
             </EditText>
 
         </LinearLayout>
@@ -151,15 +168,16 @@
                 android:id="@+id/etPostcodeLabel"
                 android:text="Postcode"
                 android:padding="5dp"
-                android:visibility="invisible"
-                android:layout_marginBottom="-5dp" />
+                android:layout_marginBottom="-5dp"
+                android:textColor="#0099cc"
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/etPostcodeName"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:hint="Postcode">
+                android:textSize="14sp">
             </EditText>
 
         </LinearLayout>
@@ -174,15 +192,16 @@ android:orientation="vertical">
     android:id="@+id/etDayTelNumberLabel"
     android:text="DayTime Tel Number"
     android:padding="5dp"
-    android:visibility="invisible"
-    android:layout_marginBottom="-5dp" />
+    android:textColor="#0099cc"
+    android:layout_marginBottom="-5dp"
+    android:textSize="14sp" />
 
 <EditText
     android:id="@+id/etDayTelNumber"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:inputType="text|number"
-    android:hint="DayTime Tel Number">
+    android:textSize="14sp">
 </EditText>
 
 </LinearLayout>
@@ -198,15 +217,16 @@ android:orientation="vertical">
     android:id="@+id/etWorkNumberLabel"
     android:text="Work Tel Number (Optional)"
     android:padding="5dp"
-    android:visibility="invisible"
-    android:layout_marginBottom="-5dp" />
+    android:textColor="#0099cc"
+    android:layout_marginBottom="-5dp"
+    android:textSize="14sp" />
 
 <EditText
     android:id="@+id/etWorkTelNumber"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:inputType="text|number"
-    android:hint="Work Tel Number (Optional)">
+    android:textSize="14sp">
 </EditText>
 
 </LinearLayout>
@@ -220,17 +240,19 @@ android:orientation="vertical">
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:id="@+id/etMobileNumberLabel"
+    android:textColor="#0099cc"
     android:text="Mobile Tel Number (Optional)"
     android:padding="5dp"
-    android:visibility="invisible"
-    android:layout_marginBottom="-5dp" />
+    android:layout_marginBottom="-5dp"
+    android:textIsSelectable="false"
+    android:textSize="14sp" />
 
 <EditText
     android:id="@+id/etMobileTelNumber"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:inputType="text|number"
-    android:hint="Mobile Tel Number (Optional)">
+    android:textSize="14sp">
 </EditText>
 
 </LinearLayout>
@@ -244,27 +266,40 @@ android:orientation="vertical">
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:id="@+id/etEmailLabel"
+    android:textColor="#0099cc"
     android:text="Email"
     android:padding="5dp"
-    android:visibility="invisible"
-    android:layout_marginBottom="-5dp" />
+    android:layout_marginBottom="-5dp"
+    android:textSize="14sp" />
 
 <EditText
     android:id="@+id/etEmail"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:inputType="text"
-    android:hint="Email">
+    android:textSize="14sp">
 </EditText>
 
 </LinearLayout>
 
-<TextView
+                </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+    <TextView
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:text="Availability at Home"
     android:gravity="center"
-    android:padding="10dp"/>
+    android:padding="10dp"
+    android:textColor="#0099cc"
+        android:textSize="14sp"
+        android:background="@drawable/grey_border_bottom" />
 
 <LinearLayout
 android:layout_height="wrap_content"
@@ -283,35 +318,35 @@ android:orientation="horizontal">
     android:layout_height="fill_parent"
     android:layout_weight="0.16"
     android:text="Mon"
-    android:gravity="center"/>
+    android:gravity="left|center"/>
 
 <TextView
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_weight="0.16"
     android:text="Tue"
-    android:gravity="center"/>
+    android:gravity="left|center"/>
 
 <TextView
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_weight="0.16"
     android:text="Wed"
-    android:gravity="center"/>
+    android:gravity="left|center"/>
 
 <TextView
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_weight="0.16"
     android:text="Thu"
-    android:gravity="center"/>
+    android:gravity="left|center"/>
 
 <TextView
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_weight="0.16"
     android:text="Fri"
-    android:gravity="center"/>
+    android:gravity="left|center"/>
 
 </LinearLayout>
 
@@ -413,10 +448,12 @@ android:orientation="horizontal">
 
 </LinearLayout>
 
+    </LinearLayout>
 <LinearLayout
 android:layout_width="fill_parent"
 android:layout_height="fill_parent"
-android:orientation="vertical">
+android:orientation="vertical"
+    android:background="@color/white">
 
 <TextView
     android:layout_width="fill_parent"
@@ -424,7 +461,7 @@ android:orientation="vertical">
     android:id="@+id/etAdditionalInfoLabel"
     android:text="Additional Info"
     android:padding="5dp"
-    android:visibility="invisible"
+    android:textColor="#0099cc"
     android:layout_marginBottom="-5dp" />
 
 <EditText
@@ -432,7 +469,7 @@ android:orientation="vertical">
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:inputType="text"
-    android:hint="Additional Info">
+    >
 </EditText>
 
 </LinearLayout>
@@ -442,7 +479,7 @@ android:orientation="vertical">
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="5dp">
                 <Button
                     android:id="@+id/submitComplaints"
                     android:layout_width="fill_parent"

@@ -215,7 +215,7 @@ public class AddressInfoFragment extends BaseFragment {
             }
         }
 
-        editTextAnimation();
+        //editTextAnimation();
 
         dayTimeAvailability = "";
         prevValHolder = "";
@@ -233,11 +233,12 @@ public class AddressInfoFragment extends BaseFragment {
 
         JSONObject obj = null;
         try {
-
-            obj = new JSONObject(session.getUserRevGeocodedLocation());
-            postcode.setText(obj.getString("mPostalCode"));
-            JSONObject geoObject = obj.getJSONObject("mAddressLines");
-            address.setText(geoObject.getString("0") + " " + geoObject.getString("1") + " " + geoObject.getString("2") + " " + geoObject.getString("3")) ;
+            if(session.getUserRevGeocodedLocation() != null) {
+                obj = new JSONObject(session.getUserRevGeocodedLocation());
+                postcode.setText(obj.getString("mPostalCode"));
+                JSONObject geoObject = obj.getJSONObject("mAddressLines");
+                address.setText(geoObject.getString("0") + ", " + geoObject.getString("1") + ", " + geoObject.getString("2") + ", " + geoObject.getString("3"));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -411,6 +412,7 @@ public class AddressInfoFragment extends BaseFragment {
                     }
 
                     Intent i = new Intent(getActivity(), MyIssuesListActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
 
                 } catch( Exception e){

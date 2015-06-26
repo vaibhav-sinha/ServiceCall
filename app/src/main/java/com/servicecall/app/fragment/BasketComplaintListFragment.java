@@ -70,9 +70,6 @@ public class BasketComplaintListFragment extends Fragment{
                 false);
         findViewsById(view);
 
-        GetEmpTask task = new GetEmpTask(activity);
-        task.execute((Void) null);
-
         return view;
     }
 

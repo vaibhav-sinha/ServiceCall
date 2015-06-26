@@ -197,7 +197,24 @@ public class AddDetailsFragment extends BaseFragment {
 
     @OnClick(R.id.ad_b_another)
     public void onAnother() {
-            new CreateNewBasketComplaint().execute();
+        if(!alreadyInBasket) {
+            try {
+                new CreateNewBasketComplaint().execute();
+                submit.setText("My Basket");
+                alreadyInBasket = true;
+                getActivity().invalidateOptionsMenu();
+                Intent myIntent = new Intent(getActivity(), SelectCategoryActivity.class);
+                startActivityForResult(myIntent, 0);
+            } catch (Exception e) {
+                submit.setText("+Basket");
+                alreadyInBasket = false;
+                e.printStackTrace();
+                Toast.makeText(getActivity(), "Something went wrong, Please try again", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Intent myIntent = new Intent(getActivity(), SelectCategoryActivity.class);
+            startActivityForResult(myIntent, 0);
+        }
     }
 
     @Override

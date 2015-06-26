@@ -417,7 +417,7 @@
                 android:padding="5dp"
                 android:layout_marginLeft="0dp"
                 android:layout_marginRight="0dp"
-                android:layout_marginBottom="70dp">
+                android:layout_marginBottom="65dp">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -457,26 +457,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#538195"
-        android:gravity="center"
-        android:padding="5dp">
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:gravity="center">
 
         <Button
             android:id="@+id/vd_b_another"
             android:text="New Complaint"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:drawableLeft="@drawable/add_another"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:background="#538195"
             android:textColor="#FFFFFF"
             android:drawSelectorOnTop="true"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:textStyle="bold"
+            android:padding="18dp"/>
 
     </LinearLayout>
 </RelativeLayout>
