@@ -3,16 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/menu_basket"
-        android:icon="@drawable/submit"
-        android:title="Basket"
-        android:actionLayout="@layout/action_bar_basket_icon"
+        android:id="@+id/push_to_server"
+        android:icon="@drawable/pushtoserver"
+        android:title="Submit"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_home"
         android:icon="@drawable/icn_home"
         android:title="Home"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_basket"
+        android:icon="@drawable/submit_blue"
+        android:title="My Basket"
         app:showAsAction="never" />
 
     <item

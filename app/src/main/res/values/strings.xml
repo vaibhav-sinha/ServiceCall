@@ -2,7 +2,7 @@
     <string name="app_name">Interfinder</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_splash">Northgate Information Solutions</string>
+    <string name="title_activity_splash">Interfinder</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -10,6 +10,11 @@
     <string name="title_activity_select_sub_category">Select SubCategory</string>
     <string name="title_activity_select_complaint">Select Complaint</string>
     <string name="title_activity_add_details">Add Details</string>
+    <string name="title_activity_edit_details">Edit Details</string>
+    <string name="title_activity_view_details">My Issue</string>
+    <string name="title_activity_address_info">My Address</string>
+    <string name="title_activity_basket_complaint">My Basket</string>
+    <string name="title_activity_my_issues">My Issues</string>
 
     <string name="adAmenityTypeLabel">Issue Category</string>
     <string name="adCountLabel">Quantity</string>

@@ -6,24 +6,24 @@ import com.servicecall.app.R;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseActivity;
 import com.servicecall.app.event.ComplaintSubmitOrDiscardEvent;
-import com.servicecall.app.fragment.AddDetailsFragment;
+import com.servicecall.app.fragment.ViewDetailsFragment;
 
 import butterknife.ButterKnife;
 
-public class AddDetailsActivity extends BaseActivity {
+public class ViewDetailsActivity extends BaseActivity {
 
-    private AddDetailsFragment addDetailsFragment;
+    private ViewDetailsFragment viewDetailsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_details);
+        setContentView(R.layout.activity_view_details);
         ButterKnife.inject(this);
         ServiceCallApplication.getApplication().getComponent().inject(this);
         eventBus.register(this);
 
-        addDetailsFragment = new AddDetailsFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.ad_fl_container, addDetailsFragment).commit();
+        viewDetailsFragment = new ViewDetailsFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.av_fl_container, viewDetailsFragment).commit();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AddDetailsActivity extends BaseActivity {
 
     public void onEventMainThread(ComplaintSubmitOrDiscardEvent event) {
         if(event.isSuccess()) {
-           // Intent i = new Intent(this, SelectCategoryActivity.class);
+            // Intent i = new Intent(this, SelectCategoryActivity.class);
             // startActivity(i);
         }
     }
@@ -42,6 +42,6 @@ public class AddDetailsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-            invalidateOptionsMenu();
+        invalidateOptionsMenu();
     }
 }

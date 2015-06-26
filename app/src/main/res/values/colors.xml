@@ -29,6 +29,8 @@
     <color name="dark_grey_green">#ff81af64</color>
     <color name="light_grey_green">#AFAF77</color>
     <color name="actionBarBg">#538195</color>
+    <color name="blue_background">#538195</color>
+    <color name="dark_blue_background">#207295</color>
 
     <color name="n_ed6f6a_n">#ED6F6A</color>
     <color name="p_ed6f6a_p">#ed5447</color>

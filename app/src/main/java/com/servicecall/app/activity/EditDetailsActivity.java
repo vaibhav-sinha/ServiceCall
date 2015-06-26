@@ -6,13 +6,13 @@ import com.servicecall.app.R;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseActivity;
 import com.servicecall.app.event.ComplaintSubmitOrDiscardEvent;
-import com.servicecall.app.fragment.AddDetailsFragment;
+import com.servicecall.app.fragment.EditDetailsFragment;
 
 import butterknife.ButterKnife;
 
-public class AddDetailsActivity extends BaseActivity {
+public class EditDetailsActivity extends BaseActivity {
 
-    private AddDetailsFragment addDetailsFragment;
+    private EditDetailsFragment editDetailsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +22,8 @@ public class AddDetailsActivity extends BaseActivity {
         ServiceCallApplication.getApplication().getComponent().inject(this);
         eventBus.register(this);
 
-        addDetailsFragment = new AddDetailsFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.ad_fl_container, addDetailsFragment).commit();
+        editDetailsFragment = new EditDetailsFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.ad_fl_container, editDetailsFragment).commit();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AddDetailsActivity extends BaseActivity {
 
     public void onEventMainThread(ComplaintSubmitOrDiscardEvent event) {
         if(event.isSuccess()) {
-           // Intent i = new Intent(this, SelectCategoryActivity.class);
+            // Intent i = new Intent(this, SelectCategoryActivity.class);
             // startActivity(i);
         }
     }
@@ -42,6 +42,6 @@ public class AddDetailsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-            invalidateOptionsMenu();
+        invalidateOptionsMenu();
     }
 }

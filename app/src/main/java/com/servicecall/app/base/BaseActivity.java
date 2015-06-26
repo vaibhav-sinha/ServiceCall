@@ -5,21 +5,26 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.servicecall.app.R;
-import com.servicecall.app.activity.HomeActivity;
+import com.servicecall.app.activity.BasketComplaintListActivity;
+import com.servicecall.app.activity.MyIssuesListActivity;
 import com.servicecall.app.activity.SelectCategoryActivity;
-import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.event.DummyEvent;
+import com.servicecall.app.helper.BasketComplaintDAO;
+import com.servicecall.app.helper.UpdateBasketComplaintCount;
+import com.servicecall.app.model.Complaint;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -33,6 +38,14 @@ public class BaseActivity extends AppCompatActivity {
     private boolean isStarted = false;
 
     Intent i;
+
+    int hot_number = 0;
+    TextView ui_hot;
+    ImageView hotlist_bell;
+    ArrayList<Complaint> basketComplaints;
+    BasketComplaintDAO basketComplaintDAO;
+
+    int basketComplaintSize = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +72,17 @@ public class BaseActivity extends AppCompatActivity {
         super.onStop();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_home, menu);
+
+        new UpdateBasketComplaintCount(this.getBaseContext(), menu);
+
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -77,8 +95,14 @@ public class BaseActivity extends AppCompatActivity {
                 startActivity(i);
                 return true;
             case R.id.menu_past_complaints:
+                i = new Intent(getBaseContext(), MyIssuesListActivity.class);
+                startActivity(i);
                 return true;
             case R.id.menu_aboutus:
+                return true;
+            case R.id.menu_basket:
+                i = new Intent(getBaseContext(), BasketComplaintListActivity.class);
+                startActivity(i);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

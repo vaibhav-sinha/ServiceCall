@@ -21,7 +21,7 @@ public class Session {
 
     private List<CategoryWithChildCategoryDto> categoryWithChildCategoryDtoList;
     private String userRevGeocodedLocation;
-    private List<Complaint> complaints = new ArrayList<>();
+    private ArrayList<Complaint> complaints = new ArrayList<>();
     private Double latitude;
     private Double longitude;
 }

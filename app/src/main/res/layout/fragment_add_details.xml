@@ -19,7 +19,7 @@
             android:orientation="vertical"
             android:background="@color/white"
             android:padding="5dp"
-            android:layout_margin="10dp">
+            android:layout_margin="5dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -56,8 +56,8 @@
             android:orientation="vertical"
             android:background="@color/white"
             android:padding="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@color/white"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:padding="5dp">
 
             <TextView
@@ -120,7 +120,9 @@
                 android:layout_weight="0.5"
                 android:layout_gravity="left"
                 android:gravity="left|center_vertical">
-
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
             <Spinner
                 android:id="@+id/ad_s_count"
                 android:layout_width="120dp"
@@ -130,6 +132,17 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="left|center_vertical" />
 
+                    <TextView
+                        android:id="@+id/ad_s_count_placeholder"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:shadowColor="#ff865429"
+                        android:textSize="14sp"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="left|center_vertical"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
             </LinearLayout>
 
         </LinearLayout>
@@ -138,9 +151,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@color/white">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -177,10 +190,13 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_marginBottom="10dp">
 
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/adDescription"
@@ -195,6 +211,20 @@
                 android:paddingTop="5dp"
                 android:textSize="13sp" />
 
+                <TextView
+                    android:id="@+id/adDescriptionPlaceholder"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:height="70dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:textSize="13sp"
+                    android:visibility="gone"/>
+            </RelativeLayout>
         </RelativeLayout>
 
 
@@ -245,4 +275,13 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/editcomplaint"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/editBasketComplaint"
+        android:visibility="gone"/>
 </RelativeLayout>

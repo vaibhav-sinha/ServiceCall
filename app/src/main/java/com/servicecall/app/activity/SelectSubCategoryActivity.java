@@ -1,7 +1,6 @@
 package com.servicecall.app.activity;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,9 +9,7 @@ import android.view.MenuItem;
 import com.servicecall.app.R;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseActivity;
-import com.servicecall.app.event.CategorySelectEvent;
 import com.servicecall.app.event.SubCategorySelectEvent;
-import com.servicecall.app.fragment.SelectCategoryFragment;
 import com.servicecall.app.fragment.SelectSubCategoryFragment;
 
 import butterknife.ButterKnife;
@@ -55,22 +52,9 @@ public class SelectSubCategoryActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.home) {
-            onBackPressed();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_home, menu);
-        return true;
+    protected void onResume() {
+        super.onResume();
+        invalidateOptionsMenu();
     }
 
 }

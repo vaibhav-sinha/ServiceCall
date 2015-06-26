@@ -1,29 +1,32 @@
 package com.servicecall.app.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import com.servicecall.app.R;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseActivity;
 import com.servicecall.app.event.ComplaintSubmitOrDiscardEvent;
-import com.servicecall.app.fragment.AddDetailsFragment;
+import com.servicecall.app.fragment.AddressInfoFragment;
 
 import butterknife.ButterKnife;
 
-public class AddDetailsActivity extends BaseActivity {
+public class AddressInfoActivity extends BaseActivity {
 
-    private AddDetailsFragment addDetailsFragment;
+    private AddressInfoFragment addressInfoFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_details);
+        setContentView(R.layout.activity_address_info);
         ButterKnife.inject(this);
         ServiceCallApplication.getApplication().getComponent().inject(this);
         eventBus.register(this);
 
-        addDetailsFragment = new AddDetailsFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.ad_fl_container, addDetailsFragment).commit();
+        addressInfoFragment = new AddressInfoFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.address_container, addressInfoFragment).commit();
     }
 
     @Override
@@ -34,14 +37,16 @@ public class AddDetailsActivity extends BaseActivity {
 
     public void onEventMainThread(ComplaintSubmitOrDiscardEvent event) {
         if(event.isSuccess()) {
-           // Intent i = new Intent(this, SelectCategoryActivity.class);
-            // startActivity(i);
+            Intent i = new Intent(this, SelectCategoryActivity.class);
+            startActivity(i);
         }
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-            invalidateOptionsMenu();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_submit, menu);
+        return true;
     }
+
 }

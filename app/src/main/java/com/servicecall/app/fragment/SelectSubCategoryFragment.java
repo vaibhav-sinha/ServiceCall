@@ -3,7 +3,6 @@ package com.servicecall.app.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +16,7 @@ import com.servicecall.app.R;
 import com.servicecall.app.adapter.CategoryListAdapter;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseFragment;
-import com.servicecall.app.event.CategorySelectEvent;
 import com.servicecall.app.event.SubCategorySelectEvent;
-import com.servicecall.app.util.Session;
-
-import java.awt.font.TextAttribute;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -67,6 +60,7 @@ public class SelectSubCategoryFragment extends BaseFragment {
 
         selectedCategoryName.setText(categoryWithChildCategoryDto.getName());
         CategoryListAdapter amenityListAdapter = new CategoryListAdapter(getActivity(), R.layout.item_category_list, categoryWithChildCategoryDto.getChildCategories(), null, null);
+        try{
         gvAmenityList.setAdapter(amenityListAdapter);
         gvAmenityList.setOnItemClickListener(new GridView.OnItemClickListener() {
             @Override
@@ -77,6 +71,9 @@ public class SelectSubCategoryFragment extends BaseFragment {
                 eventBus.post(event);
             }
         });
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         return rootView;
     }
 

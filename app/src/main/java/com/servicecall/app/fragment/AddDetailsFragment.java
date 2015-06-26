@@ -1,8 +1,10 @@
 package com.servicecall.app.fragment;
 
 
-import android.graphics.Color;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.drawable.StateListDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,17 +13,21 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eswaraj.web.dto.CategoryWithChildCategoryDto;
 import com.servicecall.app.R;
+import com.servicecall.app.activity.BasketComplaintListActivity;
+import com.servicecall.app.activity.EditDetailsActivity;
+import com.servicecall.app.activity.SelectCategoryActivity;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseFragment;
 import com.servicecall.app.data.api.DataApi;
-import com.servicecall.app.event.ComplaintSaveResponseEvent;
-import com.servicecall.app.event.ComplaintSubmitOrDiscardEvent;
-import com.servicecall.app.model.Complaint;
+import com.servicecall.app.helper.BasketComplaintDAO;
+import com.servicecall.app.model.BasketComplaint;
 import com.servicecall.app.util.Session;
 
 import javax.inject.Inject;
@@ -50,17 +56,33 @@ public class AddDetailsFragment extends BaseFragment {
     TextView issueCategory;
     @InjectView(R.id.adDescription)
     EditText description;
+    @InjectView(R.id.adDescriptionPlaceholder)
+    TextView descriptionPlaceholder;
     @InjectView(R.id.ad_s_count)
     Spinner count;
+    @InjectView(R.id.ad_s_count_placeholder)
+    TextView countPlaceholder;
     @InjectView(R.id.ad_b_another)
     Button another;
     @InjectView(R.id.ad_b_basket)
     Button submit;
     @InjectView(R.id.ad_b_discard)
     Button discard;
+    @InjectView(R.id.editBasketComplaint)
+    ImageView editBasketComplaintDetails;
 
     int colorId;
     int colorIdPressed;
+
+    // Progress Dialog
+    private ProgressDialog progressDialog;
+    BasketComplaint complaint;
+    Boolean addedToBasket = false;
+    Boolean alreadyInBasket = false;
+    Boolean alreadyInSharedPref = false;
+    Boolean singleIemCheckTrue = false;
+
+    BasketComplaintDAO basketComplaintDAO;
 
     public AddDetailsFragment() {
         // Required empty public constructor
@@ -89,14 +111,6 @@ public class AddDetailsFragment extends BaseFragment {
         issueCategory.setText(parentCategoryDto.getName());
         //Initial state
 
-        if(session.getComplaints().size() > 1) {
-            submit.setText("Submit all");
-            discard.setText("Discard all");
-        }
-        else {
-            submit.setText("Submit");
-            discard.setText("Discard");
-        }
         final Integer[] items = new Integer[]{1,2,3,4,5,6,7,8,9,10};
         ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(getActivity(),R.layout.item_spinner, items);
         count.setAdapter(adapter);
@@ -131,98 +145,171 @@ public class AddDetailsFragment extends BaseFragment {
             }
         }
 
+        new CheckBasketForAlreadyAddedComplaint().execute();
+
+        editBasketComplaintDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent myIntent = new Intent(getActivity(), EditDetailsActivity.class);
+                    Bundle mBundle = new Bundle();
+                    mBundle.putParcelable("complaint", basketComplaintDAO.getBasketComplaintObjectByCategoryId(String.valueOf(categoryWithChildCategoryDto.getId())));
+                    myIntent.putExtras(mBundle);
+                    getActivity().startActivity(myIntent);
+                } catch (Exception e){
+                    Toast.makeText(getActivity(), "Unable to edit complaint", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+        });
+
         return rootView;
     }
 
     @OnClick(R.id.ad_b_basket)
     public void onSubmit() {
-        if(session.getLatitude() != null) {
-            addComplaintToSession();
-            pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
-            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-            pDialog.setTitleText("Submitting");
-            pDialog.setCancelable(false);
-            pDialog.show();
-            submitComplaints();
+
+        if(!alreadyInBasket) {
+            try {
+                new CreateNewBasketComplaint().execute();
+                submit.setText("My Basket");
+                alreadyInBasket = true;
+                getActivity().invalidateOptionsMenu();
+            } catch (Exception e) {
+                submit.setText("+Basket");
+                alreadyInBasket = false;
+                e.printStackTrace();
+                Toast.makeText(getActivity(), "Something went wrong, Please try again", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Intent myIntent = new Intent(getActivity(), BasketComplaintListActivity.class);
+            startActivityForResult(myIntent, 0);
         }
-        else {
-            new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Oops...")
-                    .setContentText("Could not get your location. Make sure location setting is enabled on your device and try again.")
-                    .show();
-        }
+
     }
 
     @OnClick(R.id.ad_b_discard)
     public void onDiscard() {
         session.getComplaints().clear();
-        sendEvent();
+        Intent myIntent = new Intent(getActivity(), SelectCategoryActivity.class);
+        startActivityForResult(myIntent, 0);
     }
 
     @OnClick(R.id.ad_b_another)
     public void onAnother() {
-        if(session.getLatitude() != null) {
-            addComplaintToSession();
-            sendEvent();
-        }
-        else {
-            new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Oops...")
-                    .setContentText("Could not get your location. Make sure location setting is enabled on your device and try again.")
-                    .show();
-        }
+            new CreateNewBasketComplaint().execute();
     }
 
-    private void addComplaintToSession() {
-        Complaint complaint = new Complaint();
-        complaint.setCategoryId(categoryWithChildCategoryDto.getId());
+    @Override
+    public void onResume(){
+        super.onResume();
+        new CheckBasketForAlreadyAddedComplaint().execute();
+    }
+
+
+    private void addComplaintDetails() {
+        complaint = new BasketComplaint();
+        complaint.setCategoryId(String.valueOf(categoryWithChildCategoryDto.getId()));
+        complaint.setIssueDetail(categoryWithChildCategoryDto.getName());
+        complaint.setIssueParent(parentCategoryDto.getName());
+        complaint.setIssueParentColor(parentCategoryDto.getColor());
+        complaint.setIssueParentImageUrl(parentCategoryDto.getImageUrl());
+        complaint.setQuantity(String.valueOf(count.getSelectedItem()));
         complaint.setDescription(description.getText().toString());
-        complaint.setCount((Integer) count.getSelectedItem());
-        complaint.setHomeLocation(session.getUserRevGeocodedLocation());
-        complaint.setLatitude(session.getLatitude());
-        complaint.setLongitude(session.getLongitude());
-        session.getComplaints().add(complaint);
     }
 
-    private void submitComplaints() {
-        dataApi.postComplaints(getActivity(), session.getComplaints());
-    }
-
-    private void sendEvent() {
-        ComplaintSubmitOrDiscardEvent event = new ComplaintSubmitOrDiscardEvent();
-        event.setSuccess(true);
-        eventBus.post(event);
-    }
-
-    public void onEventMainThread(ComplaintSaveResponseEvent event) {
-        if(event.isSuccess()) {
-            pDialog.dismissWithAnimation();
-            session.getComplaints().clear();
-            sendEvent();
+    class CreateNewBasketComplaint extends AsyncTask<String, String, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            addComplaintDetails();
         }
-        else {
-            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Error")
-                    .setContentText("Oops! Something went wrong. Retry?")
-                    .setCancelText("No, discard complaints!")
-                    .setConfirmText("Yes, try again!")
-                    .showCancelButton(true)
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            sDialog.cancel();
-                            session.getComplaints().clear();
-                            sendEvent();
-                        }
-                    })
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            submitComplaints();
-                        }
-                    })
-                    .show();
+
+        protected String doInBackground(String... args) {
+            basketComplaintDAO = new BasketComplaintDAO(getActivity());
+            try {
+                basketComplaintDAO.saveBasketComplaint(complaint);
+                addedToBasket = true;
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            if(!addedToBasket){
+                alreadyInBasket = false;
+            } else {
+                alreadyInBasket = true;
+            }
+
+            return null;
         }
+
+        protected void onPostExecute(String file_url) {
+            Toast.makeText(getActivity(), "Added to Basket", Toast.LENGTH_SHORT).show();
+            if(alreadyInBasket){
+                editBasketComplaintDetails.setVisibility(View.VISIBLE);
+                submit.setText("My Basket");
+                description.setVisibility(View.GONE);
+                descriptionPlaceholder.setText(description.getText().toString());
+                descriptionPlaceholder.setVisibility(View.VISIBLE);
+                count.setVisibility(View.GONE);
+                countPlaceholder.setVisibility(View.VISIBLE);
+                countPlaceholder.setText(count.getSelectedItem().toString());
+            } else {
+                editBasketComplaintDetails.setVisibility(View.GONE);
+                description.setVisibility(View.VISIBLE);
+                descriptionPlaceholder.setVisibility(View.GONE);
+                submit.setText("+Basket");
+                count.setVisibility(View.VISIBLE);
+                countPlaceholder.setVisibility(View.GONE);
+            }
+        }
+
     }
 
+    class CheckBasketForAlreadyAddedComplaint extends AsyncTask<String, String, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            basketComplaintDAO = new BasketComplaintDAO(getActivity());
+            try {
+                singleIemCheckTrue = basketComplaintDAO.getBasketComplaintByCategoryId(String.valueOf(categoryWithChildCategoryDto.getId()));
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return null;
+
+        }
+
+        protected void onPostExecute(String file_url) {
+            try {
+                if (singleIemCheckTrue) {
+                    submit.setText("My Basket");
+                    editBasketComplaintDetails.setVisibility(View.VISIBLE);
+                    alreadyInBasket = true;
+                    description.setVisibility(View.GONE);
+                    if(description.getText().toString().trim().isEmpty()){
+                        descriptionPlaceholder.setText(description.getText().toString());
+                    } else {
+                        descriptionPlaceholder.setText(description.getText().toString());
+                    }
+                    descriptionPlaceholder.setVisibility(View.VISIBLE);
+                    count.setVisibility(View.GONE);
+                    countPlaceholder.setVisibility(View.VISIBLE);
+                    countPlaceholder.setText(count.getSelectedItem().toString());
+                } else {
+                    submit.setText("+Basket");
+                    editBasketComplaintDetails.setVisibility(View.GONE);
+                    alreadyInBasket = false;
+                    description.setVisibility(View.VISIBLE);
+                    descriptionPlaceholder.setVisibility(View.GONE);
+                    count.setVisibility(View.VISIBLE);
+                    countPlaceholder.setVisibility(View.GONE);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+    }
 }

@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,16 +96,20 @@ public class SelectCategoryFragment extends BaseFragment implements OnMapReadyCa
         asRevGeocode.setTextColor(Color.parseColor("#929292"));
 
         CategoryListAdapter amenityListAdapter = new CategoryListAdapter(getActivity(), R.layout.item_category_list, session.getCategoryWithChildCategoryDtoList(), null, null);
-        gvAmenityList.setAdapter(amenityListAdapter);
-        gvAmenityList.setOnItemClickListener(new GridView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                CategorySelectEvent event = new CategorySelectEvent();
-                event.setSuccess(true);
-                event.setCategoryWithChildCategoryDto((CategoryWithChildCategoryDto) gvAmenityList.getAdapter().getItem(pos));
-                eventBus.post(event);
-            }
-        });
+        try {
+            gvAmenityList.setAdapter(amenityListAdapter);
+            gvAmenityList.setOnItemClickListener(new GridView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                    CategorySelectEvent event = new CategorySelectEvent();
+                    event.setSuccess(true);
+                    event.setCategoryWithChildCategoryDto((CategoryWithChildCategoryDto) gvAmenityList.getAdapter().getItem(pos));
+                    eventBus.post(event);
+                }
+            });
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         return rootView;
     }
 

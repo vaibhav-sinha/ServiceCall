@@ -1,10 +1,7 @@
 package com.servicecall.app.activity;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.servicecall.app.R;
 import com.servicecall.app.application.ServiceCallApplication;
@@ -50,4 +47,12 @@ public class SelectCategoryActivity extends BaseActivity {
             startActivity(i);
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        invalidateOptionsMenu ();
+    }
+
 }
+

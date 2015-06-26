@@ -2,7 +2,6 @@ package com.servicecall.app.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.eswaraj.web.dto.CategoryWithChildCategoryDto;
 import com.servicecall.app.R;
@@ -46,15 +45,9 @@ public class SelectComplaintActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.home) {
-            onBackPressed();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    protected void onResume() {
+        super.onResume();
+        invalidateOptionsMenu();
     }
 
 }
