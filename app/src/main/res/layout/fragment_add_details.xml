@@ -192,11 +192,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_marginBottom="10dp">
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+            android:layout_marginBottom="5dp">
 
             <EditText
                 android:id="@+id/adDescription"
@@ -204,11 +200,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/white"
-                android:height="70dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:textSize="13sp" />
 
                 <TextView
@@ -217,16 +212,37 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/white"
-                    android:height="70dp"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
                     android:textSize="13sp"
                     android:visibility="gone"/>
-            </RelativeLayout>
+
         </RelativeLayout>
 
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="85dp"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <include
+                android:id="@+id/take_photo_container_ref"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/take_photo_container" />
+
+            <include
+                android:id="@+id/photo_taken_container_ref"
+                android:layout_width="wrap_content"
+                android:layout_height="120dp"
+                layout="@layout/photo_taken_container"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

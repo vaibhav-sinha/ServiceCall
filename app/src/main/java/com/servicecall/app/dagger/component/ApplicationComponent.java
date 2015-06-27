@@ -25,6 +25,7 @@ import com.servicecall.app.fragment.SelectComplaintFragment;
 import com.servicecall.app.fragment.SelectSubCategoryFragment;
 import com.servicecall.app.fragment.SplashFragment;
 import com.servicecall.app.fragment.ViewDetailsFragment;
+import com.servicecall.app.helper.CameraHelper;
 import com.servicecall.app.util.LocationUtil;
 import com.servicecall.app.util.NetworkAccessHelper;
 import com.servicecall.app.util.ReverseGeocodingTask;
@@ -50,6 +51,7 @@ public interface ApplicationComponent {
     void inject(LocationUtil locationUtil);
     void inject(NetworkAccessHelper networkAccessHelper);
     void inject(Session session);
+    void inject(CameraHelper cameraHelper);
     void inject(ReverseGeocodingTask reverseGeocodingTask);
     void inject(GoogleMapFragment googleMapFragment);
     void inject(SelectSubCategoryActivity activity);

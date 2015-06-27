@@ -1,5 +1,6 @@
 package com.servicecall.app.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.servicecall.app.R;
@@ -44,4 +45,11 @@ public class AddDetailsActivity extends BaseActivity {
         super.onResume();
             invalidateOptionsMenu();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        addDetailsFragment.onActivityResult(requestCode, resultCode, data);
+    }
+
 }

@@ -7,6 +7,8 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,9 +27,10 @@ import com.servicecall.app.activity.BasketComplaintListActivity;
 import com.servicecall.app.activity.EditDetailsActivity;
 import com.servicecall.app.activity.SelectCategoryActivity;
 import com.servicecall.app.application.ServiceCallApplication;
-import com.servicecall.app.base.BaseFragment;
 import com.servicecall.app.data.api.DataApi;
 import com.servicecall.app.helper.BasketComplaintDAO;
+import com.servicecall.app.helper.BitmapWorkerTask;
+import com.servicecall.app.helper.CameraHelper;
 import com.servicecall.app.model.BasketComplaint;
 import com.servicecall.app.util.Session;
 
@@ -38,12 +42,14 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
-public class AddDetailsFragment extends BaseFragment {
+public class AddDetailsFragment extends CameraHelper.CameraUtilFragment  {
 
     @Inject
     Session session;
     @Inject
     DataApi dataApi;
+    @Inject
+    CameraHelper cameraHelper;
 
     SweetAlertDialog pDialog;
 
@@ -71,6 +77,20 @@ public class AddDetailsFragment extends BaseFragment {
     @InjectView(R.id.editBasketComplaint)
     ImageView editBasketComplaintDetails;
 
+    @InjectView(R.id.adTakePhoto)
+    Button takePhoto;
+    @InjectView(R.id.adAttachPhoto)
+    Button attachPhoto;
+    @InjectView(R.id.adDeletePhoto)
+    Button deletePhoto;
+    @InjectView(R.id.adRetakePhoto)
+    Button retakePhoto;
+    @InjectView(R.id.adPhotoDisplay)
+    ImageView photoDisplay;
+    @InjectView(R.id.ivDelReset)
+    LinearLayout delResetContainer;
+
+
     int colorId;
     int colorIdPressed;
 
@@ -83,6 +103,8 @@ public class AddDetailsFragment extends BaseFragment {
     Boolean singleIemCheckTrue = false;
 
     BasketComplaintDAO basketComplaintDAO;
+    private ViewGroup takePhotoContainer;
+    private ViewGroup photoTakenContainer;
 
     public AddDetailsFragment() {
         // Required empty public constructor
@@ -92,6 +114,7 @@ public class AddDetailsFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ServiceCallApplication.getApplication().getComponent().inject(this);
+        cameraHelper.setFragment(this);
         eventBus.register(this);
     }
 
@@ -105,6 +128,8 @@ public class AddDetailsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_details, container, false);
         ButterKnife.inject(this, rootView);
+        takePhotoContainer = (ViewGroup) rootView.findViewById(R.id.take_photo_container_ref);
+        photoTakenContainer = (ViewGroup) rootView.findViewById(R.id.photo_taken_container_ref);
         categoryWithChildCategoryDto = (CategoryWithChildCategoryDto) getActivity().getIntent().getSerializableExtra("complaint");
         parentCategoryDto = (CategoryWithChildCategoryDto) getActivity().getIntent().getSerializableExtra("complaintParentCategory");
         complaintName.setText(categoryWithChildCategoryDto.getName());
@@ -217,6 +242,62 @@ public class AddDetailsFragment extends BaseFragment {
         }
     }
 
+    @OnClick(R.id.adTakePhoto)
+        public void onTakePhoto() {
+            cameraHelper.openOnlyCameraIntent();
+        }
+
+    @OnClick(R.id.adAttachPhoto)
+    public void onAttachPhoto() {
+            cameraHelper.openOnlyGalleryIntent();
+        }
+
+    @OnClick(R.id.adDeletePhoto)
+    public void onDeletePhoto() {
+        cameraHelper.setImageName(null);
+        resetIssueImageView();
+    }
+
+    @OnClick(R.id.adRetakePhoto)
+    public void onRetakePhoto() {
+        cameraHelper.openImageIntent();
+    }
+
+    private void resetIssueImageView() {
+        if(TextUtils.isEmpty(cameraHelper.getImageName())) {
+            takePhotoContainer.setVisibility(View.VISIBLE);
+            photoTakenContainer.setVisibility(View.GONE);
+        } else {
+            takePhotoContainer.setVisibility(View.GONE);
+            photoTakenContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void displayImageIfAvailable() {
+        resetIssueImageView();
+        if(!TextUtils.isEmpty(cameraHelper.getImageName())) {
+            new BitmapWorkerTask(photoDisplay, 200).execute(cameraHelper.getImageName());
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        cameraHelper.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        cameraHelper.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        cameraHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -233,6 +314,16 @@ public class AddDetailsFragment extends BaseFragment {
         complaint.setIssueParentImageUrl(parentCategoryDto.getImageUrl());
         complaint.setQuantity(String.valueOf(count.getSelectedItem()));
         complaint.setDescription(description.getText().toString());
+    }
+
+    @Override
+    public void onCameraPicTaken() {
+        displayImageIfAvailable();
+    }
+
+    @Override
+    public void onGalleryPicChosen() {
+        displayImageIfAvailable();
     }
 
     class CreateNewBasketComplaint extends AsyncTask<String, String, String> {
@@ -271,6 +362,7 @@ public class AddDetailsFragment extends BaseFragment {
                 count.setVisibility(View.GONE);
                 countPlaceholder.setVisibility(View.VISIBLE);
                 countPlaceholder.setText(count.getSelectedItem().toString());
+                delResetContainer.setVisibility(View.GONE);
             } else {
                 editBasketComplaintDetails.setVisibility(View.GONE);
                 description.setVisibility(View.VISIBLE);
@@ -278,6 +370,7 @@ public class AddDetailsFragment extends BaseFragment {
                 submit.setText("+Basket");
                 count.setVisibility(View.VISIBLE);
                 countPlaceholder.setVisibility(View.GONE);
+                delResetContainer.setVisibility(View.VISIBLE);
             }
         }
 

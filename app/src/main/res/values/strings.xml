@@ -25,4 +25,13 @@
     <string name="adEnterDescLabel">(Please enter a brief description of the issue)</string>
     <string name="adAddDescLabel">Add Description</string>
 
+    <!-- photo_taken_container -->
+    <string name="removePhoto">Remove Photo</string>
+    <string name="retakePhoto">Retake Photo</string>
+
+    <!-- take_photo_container -->
+    <string name="takePhoto">Take Photo</string>
+    <string name="or">Or</string>
+    <string name="attachPhoto">Attach Photo</string>
+
 </resources>

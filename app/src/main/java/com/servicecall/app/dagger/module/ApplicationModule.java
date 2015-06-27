@@ -6,10 +6,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.data.api.DataApi;
-import com.servicecall.app.data.datastore.Server;
 import com.servicecall.app.data.datastore.ServerImpl;
 import com.servicecall.app.data.requests.ComplaintsPostRequest;
 import com.servicecall.app.data.requests.LoadCategoriesDataRequest;
+import com.servicecall.app.helper.CameraHelper;
 import com.servicecall.app.util.LocationUtil;
 import com.servicecall.app.util.NetworkAccessHelper;
 import com.servicecall.app.util.Session;
@@ -91,5 +91,11 @@ public class ApplicationModule {
     @Singleton
     LoadCategoriesDataRequest provideLoadCategoriesDataRequest() {
         return new LoadCategoriesDataRequest();
+    }
+
+    @Provides
+    @Singleton
+    CameraHelper provideCameraHelper() {
+        return new CameraHelper();
     }
 }
