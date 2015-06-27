@@ -101,7 +101,7 @@ public class ViewDetailsFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_view_details, container, false);
         ButterKnife.inject(this, rootView);
         try {
-            serverComplaint = (ServerComplaint) getActivity().getIntent().getParcelableExtra("complaint");
+            serverComplaint = (ServerComplaint) getActivity().getIntent().getParcelableExtra("serverComplaint");
             complaintName.setText(serverComplaint.getIssueDetail());
             issueCategory.setText(serverComplaint.getIssueParent());
             description.setText(serverComplaint.getDescription());

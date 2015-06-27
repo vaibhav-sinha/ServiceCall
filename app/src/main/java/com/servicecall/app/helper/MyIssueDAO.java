@@ -56,6 +56,7 @@ public class MyIssueDAO {
     String homeLocation;
     String latitude;
     String longitude;
+    String reporterName;
     String postcode;
     String occupantType;
     String propertyType;
@@ -80,9 +81,10 @@ public class MyIssueDAO {
             params.add(new BasicNameValuePair("issueParentImageUrl", myIssue.getIssueParentImageUrl()));
             params.add(new BasicNameValuePair("quantity", String.valueOf(myIssue.getQuantity())));
             params.add(new BasicNameValuePair("description", myIssue.getDescription()));
-            params.add(new BasicNameValuePair("homeLocation", myIssue.getDescription()));
+            params.add(new BasicNameValuePair("homeLocation", myIssue.getHomeLocation()));
             params.add(new BasicNameValuePair("latitude", myIssue.getLatitude()));
             params.add(new BasicNameValuePair("longitude", myIssue.getLongitude()));
+            params.add(new BasicNameValuePair("reporterName", myIssue.getReporterName()));
             params.add(new BasicNameValuePair("postcode", myIssue.getPostcode()));
             params.add(new BasicNameValuePair("occupantType", myIssue.getOccupantType()));
             params.add(new BasicNameValuePair("propertyType", myIssue.getPropertyType()));
@@ -142,6 +144,7 @@ public class MyIssueDAO {
                     homeLocation = c.getString(TAG_HOME_LOCATION);
                     latitude = c.getString(TAG_LATITUDE);
                     longitude = c.getString(TAG_LONGITUDE);
+                    reporterName = c.getString(TAG_REPORTER_NAME);
                     postcode = c.getString(TAG_POSTCODE);
                     occupantType = c.getString(TAG_OCCUPANT_TYPE);
                     propertyType = c.getString(TAG_PROPERTY_TYPE);
@@ -153,6 +156,7 @@ public class MyIssueDAO {
                     additionalInfo = c.getString(TAG_ADDITIONAL_INFO);
 
                     ServerComplaint serverComplaint = new ServerComplaint();
+                    serverComplaint.setId(Integer.valueOf(id));
                     serverComplaint.setCategoryId(Integer.valueOf(categoryId));
                     serverComplaint.setIssueDetail(issueDetail);
                     serverComplaint.setIssueParent(issueParent);
@@ -163,6 +167,7 @@ public class MyIssueDAO {
                     serverComplaint.setHomeLocation(homeLocation);
                     serverComplaint.setLatitude(latitude);
                     serverComplaint.setLongitude(longitude);
+                    serverComplaint.setReporterName(reporterName);
                     serverComplaint.setPostcode(postcode);
                     serverComplaint.setOccupantType(occupantType);
                     serverComplaint.setPropertyType(propertyType);

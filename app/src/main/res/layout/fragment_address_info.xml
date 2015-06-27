@@ -112,8 +112,12 @@
             android:layout_height="fill_parent"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/etUserNameLabel"
                 android:text="Name"
@@ -121,7 +125,15 @@
                 android:textColor="#0099cc"
                 android:layout_marginBottom="-5dp"
                 android:textSize="14sp" />
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="*"
+                    android:textColor="#cc3a1e"
+                    android:gravity="top|left"
+                    android:layout_marginTop="-5dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
             <EditText
                 android:id="@+id/etUserName"
                 android:layout_width="fill_parent"
@@ -137,15 +149,28 @@
             android:layout_height="fill_parent"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/etAddressLabel"
-                android:text="Address"
-                android:padding="5dp"
-                android:textColor="#0099cc"
-                android:layout_marginBottom="-5dp"
-                android:textSize="14sp" />
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/etAddressLabel"
+                    android:text="Address"
+                    android:padding="5dp"
+                    android:textColor="#0099cc"
+                    android:layout_marginBottom="-5dp"
+                    android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="*"
+                    android:textColor="#cc3a1e"
+                    android:gravity="top|left"
+                    android:layout_marginTop="-5dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/etAddressName"
@@ -162,15 +187,28 @@
             android:layout_height="fill_parent"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/etPostcodeLabel"
-                android:text="Postcode"
-                android:padding="5dp"
-                android:layout_marginBottom="-5dp"
-                android:textColor="#0099cc"
-                android:textSize="14sp" />
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/etPostcodeLabel"
+                    android:text="Postcode"
+                    android:padding="5dp"
+                    android:layout_marginBottom="-5dp"
+                    android:textColor="#0099cc"
+                    android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="*"
+                    android:textColor="#cc3a1e"
+                    android:gravity="top|left"
+                    android:layout_marginTop="-5dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/etPostcodeName"
@@ -186,15 +224,28 @@ android:layout_width="fill_parent"
 android:layout_height="wrap_content"
 android:orientation="vertical">
 
-<TextView
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/etDayTelNumberLabel"
-    android:text="DayTime Tel Number"
-    android:padding="5dp"
-    android:textColor="#0099cc"
-    android:layout_marginBottom="-5dp"
-    android:textSize="14sp" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/etDayTelNumberLabel"
+            android:text="DayTime Tel Number"
+            android:padding="5dp"
+            android:textColor="#0099cc"
+            android:layout_marginBottom="-5dp"
+            android:textSize="14sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="*"
+            android:textColor="#cc3a1e"
+            android:gravity="top|left"
+            android:layout_marginTop="-5dp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 <EditText
     android:id="@+id/etDayTelNumber"
@@ -262,15 +313,28 @@ android:layout_width="fill_parent"
 android:layout_height="wrap_content"
 android:orientation="vertical">
 
-<TextView
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/etEmailLabel"
-    android:textColor="#0099cc"
-    android:text="Email"
-    android:padding="5dp"
-    android:layout_marginBottom="-5dp"
-    android:textSize="14sp" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/etEmailLabel"
+            android:textColor="#0099cc"
+            android:text="Email"
+            android:padding="5dp"
+            android:layout_marginBottom="-5dp"
+            android:textSize="14sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="*"
+            android:textColor="#cc3a1e"
+            android:gravity="top|left"
+            android:layout_marginTop="-5dp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 <EditText
     android:id="@+id/etEmail"

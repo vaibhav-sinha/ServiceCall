@@ -132,7 +132,7 @@ public class MyIssuesListFragment extends Fragment{
                                 try{
                                 Intent myIntent = new Intent(getActivity(), ViewDetailsActivity.class);
                                 Bundle mBundle = new Bundle();
-                                mBundle.putParcelable("complaint", myIssueList.get(pos));
+                                mBundle.putParcelable("serverComplaint", myIssueList.get(pos));
                                 myIntent.putExtras(mBundle);
                                 getActivity().startActivity(myIntent);
                                 } catch(Exception e){

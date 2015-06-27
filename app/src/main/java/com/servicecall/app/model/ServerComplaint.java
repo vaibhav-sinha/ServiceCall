@@ -56,8 +56,8 @@ public class ServerComplaint implements Parcelable {
         this.propertyType = in.readString();
         this.dayTelNum = in.readString();
         this.workTelNum = in.readString();
-        this.email = in.readString();
         this.mobNum = in.readString();
+        this.email = in.readString();
         this.dayTimeAvailability = in.readString();
         this.additionalInfo = in.readString();
 
@@ -124,6 +124,7 @@ public class ServerComplaint implements Parcelable {
         parcel.writeString(getIssueParentColor());
         parcel.writeString(getIssueParentImageUrl());
         parcel.writeInt(getQuantity());
+        parcel.writeString(getDescription());
         parcel.writeString(getHomeLocation());
         parcel.writeString(getLatitude());
         parcel.writeString(getLongitude());
