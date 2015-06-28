@@ -304,7 +304,6 @@ public class AddDetailsFragment extends CameraHelper.CameraUtilFragment  {
         new CheckBasketForAlreadyAddedComplaint().execute();
     }
 
-
     private void addComplaintDetails() {
         complaint = new BasketComplaint();
         complaint.setCategoryId(String.valueOf(categoryWithChildCategoryDto.getId()));
@@ -314,6 +313,7 @@ public class AddDetailsFragment extends CameraHelper.CameraUtilFragment  {
         complaint.setIssueParentImageUrl(parentCategoryDto.getImageUrl());
         complaint.setQuantity(String.valueOf(count.getSelectedItem()));
         complaint.setDescription(description.getText().toString());
+        complaint.setIssueImagePath(cameraHelper.getImageName());
     }
 
     @Override
@@ -407,6 +407,10 @@ public class AddDetailsFragment extends CameraHelper.CameraUtilFragment  {
                     count.setVisibility(View.GONE);
                     countPlaceholder.setVisibility(View.VISIBLE);
                     countPlaceholder.setText(count.getSelectedItem().toString());
+                    displayImageIfAvailable();
+                    if(!TextUtils.isEmpty(cameraHelper.getImageName())) {
+                        delResetContainer.setVisibility(View.GONE);
+                    }
                 } else {
                     submit.setText("+Basket");
                     editBasketComplaintDetails.setVisibility(View.GONE);
@@ -415,6 +419,7 @@ public class AddDetailsFragment extends CameraHelper.CameraUtilFragment  {
                     descriptionPlaceholder.setVisibility(View.GONE);
                     count.setVisibility(View.VISIBLE);
                     countPlaceholder.setVisibility(View.GONE);
+                    delResetContainer.setVisibility(View.VISIBLE);
                 }
             } catch (Exception e){
                 e.printStackTrace();

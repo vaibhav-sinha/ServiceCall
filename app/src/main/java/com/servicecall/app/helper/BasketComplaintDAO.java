@@ -30,6 +30,7 @@ public class BasketComplaintDAO extends BasketComplaintDBDAO {
         values.put(BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_ISSUE_PARENT_IMAGE_URL, basketComplaint.getIssueParentImageUrl());
         values.put(BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_QUANTITY, basketComplaint.getQuantity());
         values.put(BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_DESCRIPTION, basketComplaint.getDescription());
+        values.put(BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_ISSUE_IMAGE_PATH, basketComplaint.getIssueImagePath());
 
         return database.insert(BasketComplaintsHelper.BASKET_COMPLAINTS_TABLE_NAME, null, values);
     }
@@ -44,6 +45,7 @@ public class BasketComplaintDAO extends BasketComplaintDBDAO {
         values.put(BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_ISSUE_PARENT_IMAGE_URL, basketComplaint.getIssueParentImageUrl());
         values.put(BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_QUANTITY, basketComplaint.getQuantity());
         values.put(BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_DESCRIPTION, basketComplaint.getDescription());
+        values.put(BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_ISSUE_IMAGE_PATH, basketComplaint.getIssueImagePath());
 
         long result = database.update(BasketComplaintsHelper.BASKET_COMPLAINTS_TABLE_NAME, values,
                 WHERE_ID_EQUALS,
@@ -72,7 +74,8 @@ public class BasketComplaintDAO extends BasketComplaintDBDAO {
                         BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_ISSUE_PARENT_COLOR,
                         BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_ISSUE_PARENT_IMAGE_URL,
                         BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_QUANTITY,
-                        BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_DESCRIPTION }, null, null, null,
+                        BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_DESCRIPTION,
+                        BasketComplaintsHelper.BASKET_COMPLAINTS_COLUMN_ISSUE_IMAGE_PATH }, null, null, null,
                 null, null, null);
 
         while (cursor.moveToNext()) {
@@ -85,6 +88,7 @@ public class BasketComplaintDAO extends BasketComplaintDBDAO {
             basketComplaint.setIssueParentImageUrl(cursor.getString(5));
             basketComplaint.setQuantity(cursor.getString(6));
             basketComplaint.setDescription(cursor.getString(7));
+            basketComplaint.setIssueImagePath(cursor.getString(8));
             basketComplaints.add(basketComplaint);
         }
         return basketComplaints;
@@ -110,6 +114,7 @@ public class BasketComplaintDAO extends BasketComplaintDBDAO {
             basketComplaint.setIssueParentImageUrl(cursor.getString(5));
             basketComplaint.setQuantity(cursor.getString(6));
             basketComplaint.setDescription(cursor.getString(7));
+            basketComplaint.setIssueImagePath(cursor.getString(8));
         }
         return basketComplaint;
     }
@@ -134,6 +139,7 @@ public class BasketComplaintDAO extends BasketComplaintDBDAO {
             basketComplaint.setIssueParentImageUrl(cursor.getString(5));
             basketComplaint.setQuantity(cursor.getString(6));
             basketComplaint.setDescription(cursor.getString(7));
+            basketComplaint.setIssueImagePath(cursor.getString(8));
         }
         return basketComplaint;
     }

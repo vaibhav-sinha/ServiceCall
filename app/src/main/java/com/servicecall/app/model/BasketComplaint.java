@@ -19,6 +19,7 @@ public class BasketComplaint implements Parcelable {
     private String issueParentImageUrl;
     private String quantity;
     private String description;
+    private String issueImagePath;
 
     public BasketComplaint() {
         super();
@@ -34,6 +35,7 @@ public class BasketComplaint implements Parcelable {
         this.issueParentImageUrl = in.readString();
         this.quantity = in.readString();
         this.description = in.readString();
+        this.issueImagePath = in.readString();
     }
 
     @Override
@@ -44,7 +46,8 @@ public class BasketComplaint implements Parcelable {
                 " issueParentColor=" + issueParentColor + "," +
                 " issueParentImageUrl=" + issueParentImageUrl + "," +
                 " quantity=" + quantity + "," +
-                " description=" + description + "]";
+                " description=" + description + "," +
+                " issueImagePath=" + issueImagePath + "]";
     }
 
     @Override
@@ -84,6 +87,7 @@ public class BasketComplaint implements Parcelable {
         parcel.writeString(getIssueParentImageUrl());
         parcel.writeString(getQuantity());
         parcel.writeString(getDescription());
+        parcel.writeString(getIssueImagePath());
     }
 
     public static final Parcelable.Creator<BasketComplaint> CREATOR = new Parcelable.Creator<BasketComplaint>() {

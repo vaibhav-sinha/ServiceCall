@@ -9,12 +9,16 @@ import android.graphics.Color;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,9 +27,10 @@ import com.servicecall.app.R;
 import com.servicecall.app.activity.BasketComplaintListActivity;
 import com.servicecall.app.activity.SelectCategoryActivity;
 import com.servicecall.app.application.ServiceCallApplication;
-import com.servicecall.app.base.BaseFragment;
 import com.servicecall.app.data.api.DataApi;
 import com.servicecall.app.helper.BasketComplaintDAO;
+import com.servicecall.app.helper.BitmapWorkerTask;
+import com.servicecall.app.helper.CameraHelper;
 import com.servicecall.app.model.BasketComplaint;
 import com.servicecall.app.util.Session;
 
@@ -37,12 +42,14 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
-public class EditDetailsFragment extends BaseFragment {
+public class EditDetailsFragment extends CameraHelper.CameraUtilFragment {
 
     @Inject
     Session session;
     @Inject
     DataApi dataApi;
+    @Inject
+    CameraHelper cameraHelper;
 
     SweetAlertDialog pDialog;
 
@@ -62,6 +69,19 @@ public class EditDetailsFragment extends BaseFragment {
     Button submit;
     @InjectView(R.id.ad_b_discard)
     Button discard;
+    @InjectView(R.id.adPhotoDisplay)
+    ImageView photoDisplay;
+
+    @InjectView(R.id.adTakePhoto)
+    Button takePhoto;
+    @InjectView(R.id.adAttachPhoto)
+    Button attachPhoto;
+    @InjectView(R.id.adDeletePhoto)
+    Button deletePhoto;
+    @InjectView(R.id.adRetakePhoto)
+    Button retakePhoto;
+    @InjectView(R.id.ivDelReset)
+    LinearLayout delResetContainer;
 
     int colorId;
     int colorIdPressed;
@@ -72,6 +92,9 @@ public class EditDetailsFragment extends BaseFragment {
 
     BasketComplaintDAO basketComplaintDAO;
 
+    private ViewGroup takePhotoContainer;
+    private ViewGroup photoTakenContainer;
+
     public EditDetailsFragment() {
         // Required empty public constructor
     }
@@ -80,6 +103,7 @@ public class EditDetailsFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ServiceCallApplication.getApplication().getComponent().inject(this);
+        cameraHelper.setFragment(this);
         eventBus.register(this);
     }
 
@@ -93,12 +117,15 @@ public class EditDetailsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_details, container, false);
         ButterKnife.inject(this, rootView);
+        takePhotoContainer = (ViewGroup) rootView.findViewById(R.id.take_photo_container_ref);
+        photoTakenContainer = (ViewGroup) rootView.findViewById(R.id.photo_taken_container_ref);
         try {
             basketComplaint = (BasketComplaint) getActivity().getIntent().getParcelableExtra("complaint");
             complaintName.setText(basketComplaint.getIssueDetail());
             issueCategory.setText(basketComplaint.getIssueParent());
             description.setText(basketComplaint.getDescription());
-
+            displayImageIfAvailable();
+            delResetContainer.setVisibility(View.VISIBLE);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -156,6 +183,7 @@ public class EditDetailsFragment extends BaseFragment {
                                     public void onClick(DialogInterface dialog, int id) {
                                             basketComplaint.setQuantity(String.valueOf(count.getSelectedItem()));
                                             basketComplaint.setDescription(description.getText().toString());
+                                            basketComplaint.setIssueImagePath(cameraHelper.getImageName());
                                             BasketComplaintDAO basketComplaintDAO = new BasketComplaintDAO(getActivity());
                                             basketComplaintDAO.updateBasketComplaint(basketComplaint);
                                             Intent myIntent = new Intent(getActivity(), BasketComplaintListActivity.class);
@@ -195,6 +223,7 @@ public class EditDetailsFragment extends BaseFragment {
                                         try {
                                             basketComplaint.setQuantity(String.valueOf(count.getSelectedItem()));
                                             basketComplaint.setDescription(description.getText().toString());
+                                            basketComplaint.setIssueImagePath(cameraHelper.getImageName());
                                             BasketComplaintDAO basketComplaintDAO = new BasketComplaintDAO(getActivity());
                                             basketComplaintDAO.updateBasketComplaint(basketComplaint);
                                             Intent myIntent = new Intent(getActivity(), SelectCategoryActivity.class);
@@ -237,5 +266,73 @@ public class EditDetailsFragment extends BaseFragment {
     public void onResume(){
         super.onResume();
     }
+
+
+    @OnClick(R.id.adTakePhoto)
+    public void onTakePhoto() {
+        cameraHelper.openOnlyCameraIntent();
+    }
+
+    @OnClick(R.id.adAttachPhoto)
+    public void onAttachPhoto() {
+        cameraHelper.openOnlyGalleryIntent();
+    }
+
+    @OnClick(R.id.adDeletePhoto)
+    public void onDeletePhoto() {
+        cameraHelper.setImageName(null);
+        resetIssueImageView();
+    }
+
+    @OnClick(R.id.adRetakePhoto)
+    public void onRetakePhoto() {
+        cameraHelper.openImageIntent();
+    }
+
+    private void resetIssueImageView() {
+        if(TextUtils.isEmpty(cameraHelper.getImageName())) {
+            takePhotoContainer.setVisibility(View.VISIBLE);
+            photoTakenContainer.setVisibility(View.GONE);
+        } else {
+            takePhotoContainer.setVisibility(View.GONE);
+            photoTakenContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void displayImageIfAvailable() {
+        resetIssueImageView();
+        if(!TextUtils.isEmpty(cameraHelper.getImageName())) {
+            new BitmapWorkerTask(photoDisplay, 200).execute(cameraHelper.getImageName());
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        cameraHelper.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        cameraHelper.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        cameraHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onCameraPicTaken() {
+        displayImageIfAvailable();
+    }
+
+    @Override
+    public void onGalleryPicChosen() {
+        displayImageIfAvailable();
+    }
+
 
 }

@@ -19,6 +19,7 @@ public class BasketComplaintsHelper extends SQLiteOpenHelper {
     public static final String BASKET_COMPLAINTS_COLUMN_ISSUE_PARENT_IMAGE_URL = "issueParentImageUrl";
     public static final String BASKET_COMPLAINTS_COLUMN_QUANTITY = "quantity";
     public static final String BASKET_COMPLAINTS_COLUMN_DESCRIPTION = "decsription";
+    public static final String BASKET_COMPLAINTS_COLUMN_ISSUE_IMAGE_PATH = "issueImagePath";
 
     public static final String CREATE_BASKET_COMPLAINTS_TABLE = "CREATE TABLE "
             + BASKET_COMPLAINTS_TABLE_NAME + "(" + BASKET_COMPLAINTS_COLUMN_ID + " INTEGER PRIMARY KEY, "
@@ -28,7 +29,8 @@ public class BasketComplaintsHelper extends SQLiteOpenHelper {
             + BASKET_COMPLAINTS_COLUMN_ISSUE_PARENT_COLOR + " TEXT, "
             + BASKET_COMPLAINTS_COLUMN_ISSUE_PARENT_IMAGE_URL + " TEXT, "
             + BASKET_COMPLAINTS_COLUMN_QUANTITY + " TEXT, "
-            + BASKET_COMPLAINTS_COLUMN_DESCRIPTION + " TEXT" + ")";
+            + BASKET_COMPLAINTS_COLUMN_DESCRIPTION + " TEXT, "
+            + BASKET_COMPLAINTS_COLUMN_ISSUE_IMAGE_PATH + " TEXT" + ")";
 
     private static BasketComplaintsHelper instance;
 

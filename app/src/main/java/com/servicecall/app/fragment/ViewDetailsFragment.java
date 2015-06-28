@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,8 @@ import com.servicecall.app.activity.SelectCategoryActivity;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseFragment;
 import com.servicecall.app.data.api.DataApi;
+import com.servicecall.app.helper.BitmapWorkerTask;
+import com.servicecall.app.helper.CameraHelper;
 import com.servicecall.app.helper.MyIssueDAO;
 import com.servicecall.app.model.ServerComplaint;
 import com.servicecall.app.util.Session;
@@ -36,6 +40,8 @@ public class ViewDetailsFragment extends BaseFragment {
     Session session;
     @Inject
     DataApi dataApi;
+    @Inject
+    CameraHelper cameraHelper;
 
     SweetAlertDialog pDialog;
 
@@ -69,7 +75,9 @@ public class ViewDetailsFragment extends BaseFragment {
     @InjectView(R.id.issueIcon)
     ImageView issuePic;
 
-    
+    @InjectView(R.id.adPhotoDisplay)
+    ImageView photoDisplay;
+
     int colorId;
     int colorIdPressed;
 
@@ -163,6 +171,24 @@ public class ViewDetailsFragment extends BaseFragment {
     @Override
     public void onResume(){
         super.onResume();
+    }
+
+    private void displayImageIfAvailable() {
+        if(!TextUtils.isEmpty(cameraHelper.getImageName())) {
+            new BitmapWorkerTask(photoDisplay, 200).execute(cameraHelper.getImageName());
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        cameraHelper.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        cameraHelper.onRestoreInstanceState(savedInstanceState);
     }
 
 }
