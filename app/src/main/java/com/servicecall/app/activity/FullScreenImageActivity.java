@@ -1,11 +1,13 @@
 package com.servicecall.app.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import com.servicecall.app.R;
 import com.servicecall.app.base.BaseActivity;
+import com.servicecall.app.helper.BitmapWorkerTask;
 import com.squareup.picasso.Picasso;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
@@ -21,7 +23,17 @@ public class FullScreenImageActivity extends BaseActivity {
         setContentView(R.layout.activity_fullscreen_image);
         fiImage = (ImageViewTouch) findViewById(R.id.fiImage);
         fiImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
-        Picasso.with(this).load(getIntent().getStringExtra("IMAGE")).into(fiImage);
+        fiImage.setBackgroundColor(Color.parseColor("#00000000"));
+
+        try {
+            if (getIntent().getStringExtra("IMAGE").contains("https")) {
+                Picasso.with(this).load(getIntent().getStringExtra("IMAGE")).into(fiImage);
+            } else {
+                new BitmapWorkerTask(fiImage, 500).execute(getIntent().getStringExtra("IMAGE"));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

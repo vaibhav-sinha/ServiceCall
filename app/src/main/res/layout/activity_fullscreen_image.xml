@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.next.eswaraj.activities.FullscreenImageActivity"
+    tools:context="com.servicecall.app.activity.FullscreenImageActivity"
     android:background="@color/transparent">
 
     <it.sephiroth.android.library.imagezoom.ImageViewTouch

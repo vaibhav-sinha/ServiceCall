@@ -144,7 +144,22 @@ public class BasketComplaintListFragment extends Fragment{
                             }
                         });
 
+                    } else {
+
+                        final Toast toast = Toast.makeText(activity, "No Complaints in Basket", Toast.LENGTH_LONG);
+                        toast.show();
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                                Intent myIntent = new Intent(getActivity(), SelectCategoryActivity.class);
+                                getActivity().startActivity(myIntent);
+                            }
+                        }, 500);
+
                     }
+
                 } else {
 
                     final Toast toast = Toast.makeText(activity, "No Complaints in Basket", Toast.LENGTH_LONG);

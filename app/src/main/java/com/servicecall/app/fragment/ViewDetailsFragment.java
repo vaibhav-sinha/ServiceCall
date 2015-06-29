@@ -143,15 +143,17 @@ public class ViewDetailsFragment extends BaseFragment {
                 }
             final String issueImagePath = "https://interfinderdemo-bbagentapp.rhcloud.com/uploads/" + String.valueOf(serverComplaint.getIssueImageUrl().trim().replaceAll(".*/", ""));
             Picasso.with(getActivity()).load(issueImagePath).into(issueImage);
-            issueImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(v.getContext(), FullScreenImageActivity.class);
-                    i.putExtra("IMAGE", issueImagePath);
-                    v.getContext().startActivity(i);
-                }
-            });
-
+            String issueImageName = String.valueOf(serverComplaint.getIssueImageUrl().trim().replaceAll(".*/", ""));
+            if(!(issueImageName == null) || !(issueImageName.isEmpty()) || !(issueImageName == "")) {
+                issueImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(v.getContext(), FullScreenImageActivity.class);
+                        i.putExtra("IMAGE", issueImagePath);
+                        v.getContext().startActivity(i);
+                    }
+                });
+            }
         } catch (Exception e){
             e.printStackTrace();
         }

@@ -1,8 +1,12 @@
 package com.servicecall.app.fragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +27,7 @@ import com.servicecall.app.adapter.MyIssuesListAdapter;
 import com.servicecall.app.helper.MyIssueDAO;
 import com.servicecall.app.model.Complaint;
 import com.servicecall.app.model.ServerComplaint;
+import com.servicecall.app.services.InternetServiceManager;
 import com.servicecall.app.util.Session;
 
 import java.lang.ref.WeakReference;
@@ -46,6 +51,7 @@ public class MyIssuesListFragment extends Fragment{
     SharedPreferences complaintDate;
     public static String filename = "mySharedFile";
     TextView myIssuesCount;
+    Boolean isInternetPresent = false;
 
     @Inject
     Session session;
@@ -54,6 +60,23 @@ public class MyIssuesListFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
+        isInternetPresent = new NetworkChangeReceiver().checkInternet(getActivity());
+        if (isInternetPresent) {
+            GetEmpTask task = new GetEmpTask(activity);
+            task.execute((Void) null);
+        } else {
+            final Toast toast = Toast.makeText(getActivity(), "Internet Connection Unavailable. Please connect to Internet to proceed further", Toast.LENGTH_SHORT);
+            toast.show();
+            getActivity().registerReceiver(
+                    new NetworkChangeReceiver(),
+                    new IntentFilter(
+                            ConnectivityManager.CONNECTIVITY_ACTION));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toast.cancel();
+                }
+            }, 2000);        }
 
     }
 
@@ -92,8 +115,6 @@ public class MyIssuesListFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        GetEmpTask task = new GetEmpTask(activity);
-        task.execute((Void) null);
     }
 
 
@@ -158,8 +179,46 @@ public class MyIssuesListFragment extends Fragment{
 
                 }
 
+            } else {
+
+                final Toast toast = Toast.makeText(activity, "No Issues Raised Yet", Toast.LENGTH_LONG);
+                toast.show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        toast.cancel();
+                        Intent myIntent = new Intent(getActivity(), SelectCategoryActivity.class);
+                        getActivity().startActivity(myIntent);
+                    }
+                }, 500);
+
             }
         }
+    }
+
+
+    private class NetworkChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+
+            if(checkInternet(context))
+            {
+                GetEmpTask task = new GetEmpTask(activity);
+                task.execute((Void) null);
+            }
+        }
+
+        boolean checkInternet(Context context) {
+            InternetServiceManager internetServiceManager = new InternetServiceManager(context);
+            if (internetServiceManager.isNetworkAvailable()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
     }
 
 

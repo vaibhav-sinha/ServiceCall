@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.servicecall.app.R;
 import com.servicecall.app.activity.BasketComplaintListActivity;
+import com.servicecall.app.activity.FullScreenImageActivity;
 import com.servicecall.app.activity.SelectCategoryActivity;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.data.api.DataApi;
@@ -245,6 +246,14 @@ public class EditDetailsFragment extends CameraHelper.CameraUtilFragment {
         resetIssueImageView();
         if(!TextUtils.isEmpty(cameraHelper.getImageName())) {
             new BitmapWorkerTask(photoDisplay, 200).execute(cameraHelper.getImageName());
+            photoDisplay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(v.getContext(), FullScreenImageActivity.class);
+                    i.putExtra("IMAGE", cameraHelper.getImageName());
+                    v.getContext().startActivity(i);
+                }
+            });
         }
     }
 

@@ -1,6 +1,5 @@
 package com.servicecall.app.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.servicecall.app.R;

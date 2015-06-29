@@ -1,25 +1,25 @@
 package com.servicecall.app.fragment;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.servicecall.app.R;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseFragment;
-import com.servicecall.app.config.LocalData;
 import com.servicecall.app.data.api.DataApi;
 import com.servicecall.app.event.GetCategoriesDataEvent;
 import com.servicecall.app.event.SetupDoneEvent;
+import com.servicecall.app.services.InternetServiceManager;
 import com.servicecall.app.util.Session;
 
 import javax.inject.Inject;
@@ -33,6 +33,8 @@ public class SplashFragment extends BaseFragment {
     @Inject
     DataApi dataApi;
 
+    Boolean isInternetPresent =  false;
+
     public SplashFragment() {
         // Required empty public constructor
     }
@@ -42,7 +44,6 @@ public class SplashFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         ServiceCallApplication.getApplication().getComponent().inject(this);
         eventBus.register(this);
-        dataApi.loadCategoriesData(getActivity());
 
     }
 
@@ -90,4 +91,49 @@ public class SplashFragment extends BaseFragment {
                     .show();
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isInternetPresent = new NetworkChangeReceiver().checkInternet(getActivity());
+        if (isInternetPresent) {
+            dataApi.loadCategoriesData(getActivity());
+        } else {
+            final Toast toast = Toast.makeText(getActivity(), "Internet Connection Unavailable. Please connect to Internet to proceed further", Toast.LENGTH_SHORT);
+            toast.show();
+            getActivity().registerReceiver(
+                    new NetworkChangeReceiver(),
+                    new IntentFilter(
+                            ConnectivityManager.CONNECTIVITY_ACTION));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    toast.cancel();
+                }
+            }, 2000);        }
+    }
+
+    private class NetworkChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+
+            if(checkInternet(context))
+            {
+                dataApi.loadCategoriesData(getActivity());
+            }
+        }
+
+        boolean checkInternet(Context context) {
+            InternetServiceManager internetServiceManager = new InternetServiceManager(context);
+            if (internetServiceManager.isNetworkAvailable()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+    }
+
+
 }
