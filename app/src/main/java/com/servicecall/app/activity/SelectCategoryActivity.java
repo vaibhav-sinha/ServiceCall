@@ -89,8 +89,6 @@ public void exitFromApp(){
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             moveTaskToBack(true);
-                            android.os.Process.killProcess(android.os.Process.myPid());
-                            System.exit(1);
                         }
                     })
             .setNegativeButton("No", new DialogInterface.OnClickListener() {

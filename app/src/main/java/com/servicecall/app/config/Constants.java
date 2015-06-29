@@ -6,5 +6,5 @@ package com.servicecall.app.config;
 public class Constants {
 
     public static final String COMPLAINTS_POST_URL = "https://interfinderdemo-bbagentapp.rhcloud.com/create_complaint.php";
-    public static final String GET_CATEGORIES_URL = "http://www.json-generator.com/api/json/get/ciZUdnKkbS?indent=2";
+    public static final String GET_CATEGORIES_URL = "http://www.json-generator.com/api/json/get/cvxcPELCtK?indent=2";
 }
