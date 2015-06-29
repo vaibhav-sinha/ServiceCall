@@ -32,6 +32,7 @@ public class ServerComplaint implements Parcelable {
     private String mobNum;
     private String dayTimeAvailability;
     private String additionalInfo;
+    private String issueImageUrl;
 
     public ServerComplaint() {
         super();
@@ -60,6 +61,7 @@ public class ServerComplaint implements Parcelable {
         this.email = in.readString();
         this.dayTimeAvailability = in.readString();
         this.additionalInfo = in.readString();
+        this.issueImageUrl = in.readString();
 
     }
 
@@ -84,7 +86,8 @@ public class ServerComplaint implements Parcelable {
                 " mobNum=" + mobNum + "," +
                 " email=" + email + "," +
                 " dayTimeAvailability=" + dayTimeAvailability + "," +
-                " additionalInfo=" + additionalInfo + "]";
+                " additionalInfo=" + additionalInfo + "," +
+                " issueImageUrl=" + issueImageUrl + "]";
 
     }
 
@@ -138,6 +141,7 @@ public class ServerComplaint implements Parcelable {
         parcel.writeString(getEmail());
         parcel.writeString(getDayTimeAvailability());
         parcel.writeString(getAdditionalInfo());
+        parcel.writeString(getIssueImageUrl());
     }
 
     public static final Parcelable.Creator<ServerComplaint> CREATOR = new Parcelable.Creator<ServerComplaint>() {

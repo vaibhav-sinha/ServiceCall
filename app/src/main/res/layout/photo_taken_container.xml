@@ -35,7 +35,6 @@
             android:layout_height="fill_parent"
             android:orientation="vertical"
             android:layout_weight="0.5"
-            android:id="@+id/ivDelReset"
             android:layout_marginLeft="5dp">
 
             <Button

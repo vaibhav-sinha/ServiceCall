@@ -21,6 +21,7 @@ public class MyIssueDAO {
     private static String url_create_complaint = "https://interfinderdemo-bbagentapp.rhcloud.com/create_complaint.php";
     private static final String url_get_complaint_details = "https://interfinderdemo-bbagentapp.rhcloud.com/get_complaint_details.php";
     private static String url_get_all_complaints = "https://interfinderdemo-bbagentapp.rhcloud.com/get_all_complaints.php";
+    public static final String IMAGE_DIRECTORY_NAME = "issueimages";
     private static final String TAG_COMPLAINTS = "complaints";
     private static final String TAG_PID = "pid";
     private static final String TAG_CATEGORY_ID = "categoryId";
@@ -43,6 +44,7 @@ public class MyIssueDAO {
     private static final String TAG_EMAIL = "email";
     private static final String TAG_DAY_TIME_AVAILABILITY = "dayTimeAvailability";
     private static final String TAG_ADDITIONAL_INFO = "additionalInfo";
+    private static final String TAG_ADDITIONAL_ISSUE_IMAGE_URL = "issueImageUrl";
 
     JSONArray complaints = null;
     String id;
@@ -66,7 +68,7 @@ public class MyIssueDAO {
     String email;
     String dayTimeAvailability;
     String additionalInfo;
-
+    String issueImageUrl;
 
     int success;
     ArrayList<ServerComplaint> myIssuesList = new ArrayList<>();
@@ -94,6 +96,7 @@ public class MyIssueDAO {
             params.add(new BasicNameValuePair("email", myIssue.getEmail()));
             params.add(new BasicNameValuePair("dayTimeAvailability", myIssue.getDayTimeAvailability()));
             params.add(new BasicNameValuePair("additionalInfo", myIssue.getAdditionalInfo()));
+            params.add(new BasicNameValuePair("issueImageUrl", myIssue.getIssueImageUrl()));
 
             JSONObject json = jsonParser.makeHttpRequest(url_create_complaint,
                     "POST", params);
@@ -154,6 +157,7 @@ public class MyIssueDAO {
                     email = c.getString(TAG_EMAIL);
                     dayTimeAvailability = c.getString(TAG_DAY_TIME_AVAILABILITY);
                     additionalInfo = c.getString(TAG_ADDITIONAL_INFO);
+                    issueImageUrl = c.getString(TAG_ADDITIONAL_ISSUE_IMAGE_URL);
 
                     ServerComplaint serverComplaint = new ServerComplaint();
                     serverComplaint.setId(Integer.valueOf(id));
@@ -177,6 +181,7 @@ public class MyIssueDAO {
                     serverComplaint.setEmail(email);
                     serverComplaint.setDayTimeAvailability(dayTimeAvailability);
                     serverComplaint.setAdditionalInfo(additionalInfo);
+                    serverComplaint.setIssueImageUrl(issueImageUrl);
                     myIssuesList.add(serverComplaint);
                 }
             } else {
@@ -184,10 +189,57 @@ public class MyIssueDAO {
                 return null;
             }
         } catch (JSONException e) {
+
             e.printStackTrace();
         }
 
         return myIssuesList;
     }
+
+
+/*    @SuppressWarnings("deprecation")
+    public String uploadFile(String filePath){
+
+            String responseString = null;
+
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(url_upload_issue_image);
+
+            try {
+
+                File sourceFile = new File(filePath);
+                FileBody fileBody = new FileBody(sourceFile);
+
+               // httppost.setHeader("enctype", "multipart/form-data");
+
+                MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
+                multipartEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+                multipartEntity.addPart("sampleImage", fileBody);
+                multipartEntity.addPart("website", new StringBody("https://interfinderdemo-bbagentapp.rhcloud.com"));
+                httppost.setEntity(multipartEntity.build());
+
+                HttpResponse response = httpclient.execute(httppost);
+
+                HttpEntity r_entity = response.getEntity();
+
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode == 200) {
+                    // Server response
+                    responseString = EntityUtils.toString(r_entity);
+                } else {
+                    responseString = "Error occurred! Http Status Code: "
+                            + statusCode;
+                }
+
+            } catch (ClientProtocolException e) {
+                responseString = e.toString();
+            } catch (IOException e) {
+                responseString = e.toString();
+            }
+
+            return responseString;
+    }
+*/
+
 
 }

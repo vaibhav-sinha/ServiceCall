@@ -18,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,8 +79,6 @@ public class EditDetailsFragment extends CameraHelper.CameraUtilFragment {
     Button deletePhoto;
     @InjectView(R.id.adRetakePhoto)
     Button retakePhoto;
-    @InjectView(R.id.ivDelReset)
-    LinearLayout delResetContainer;
 
     int colorId;
     int colorIdPressed;
@@ -89,11 +86,16 @@ public class EditDetailsFragment extends CameraHelper.CameraUtilFragment {
     // Progress Dialog
     private ProgressDialog progressDialog;
     Boolean addedToBasket = false;
+    Boolean imagePathPlaceholderNull = false;
 
     BasketComplaintDAO basketComplaintDAO;
 
     private ViewGroup takePhotoContainer;
     private ViewGroup photoTakenContainer;
+
+    String quantityPlaceholder = "";
+    String descriptionPlaceholder = "";
+    String imagePathPlaceholder = null;
 
     public EditDetailsFragment() {
         // Required empty public constructor
@@ -124,8 +126,8 @@ public class EditDetailsFragment extends CameraHelper.CameraUtilFragment {
             complaintName.setText(basketComplaint.getIssueDetail());
             issueCategory.setText(basketComplaint.getIssueParent());
             description.setText(basketComplaint.getDescription());
+            cameraHelper.setImageName(basketComplaint.getIssueImagePath());
             displayImageIfAvailable();
-            delResetContainer.setVisibility(View.VISIBLE);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -139,6 +141,14 @@ public class EditDetailsFragment extends CameraHelper.CameraUtilFragment {
         int compareValue = Math.round((int) compValue);
         int counterPosition = adapter.getPosition(compareValue);
         count.setSelection(counterPosition);
+
+        quantityPlaceholder = basketComplaint.getQuantity();
+        descriptionPlaceholder = basketComplaint.getDescription();
+        imagePathPlaceholder = basketComplaint.getIssueImagePath();
+
+        if(imagePathPlaceholder == null){
+            imagePathPlaceholderNull = true;
+        }
 
         final String[] colorHexCode = new String[]{"7B9FAD","90BBC9","DBDBDB"};
         for(String hexCodeVal : colorHexCode ) {
@@ -175,83 +185,14 @@ public class EditDetailsFragment extends CameraHelper.CameraUtilFragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-                alertDialogBuilder.setMessage("Do you want to save the changes?")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                            basketComplaint.setQuantity(String.valueOf(count.getSelectedItem()));
-                                            basketComplaint.setDescription(description.getText().toString());
-                                            basketComplaint.setIssueImagePath(cameraHelper.getImageName());
-                                            BasketComplaintDAO basketComplaintDAO = new BasketComplaintDAO(getActivity());
-                                            basketComplaintDAO.updateBasketComplaint(basketComplaint);
-                                            Intent myIntent = new Intent(getActivity(), BasketComplaintListActivity.class);
-                                            startActivityForResult(myIntent, 0);
-                                    }
-                                });
-                alertDialogBuilder.setNegativeButton("No",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                Intent myIntent = new Intent(getActivity(), BasketComplaintListActivity.class);
-                                startActivityForResult(myIntent, 0);
-                            }
-                        });
-                AlertDialog alert = alertDialogBuilder.create();
-                alert.show();
-
-                Button posB = alert.getButton(DialogInterface.BUTTON_POSITIVE);
-                Button negB = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
-                posB.setBackgroundResource(R.drawable.blue_dark_blue_highlight);
-                posB.setTextColor(Color.WHITE);
-                posB.setTransformationMethod(null);
-                negB.setTransformationMethod(null);
-
+                askUserToSaveChanges(BasketComplaintListActivity.class);
             }
         });
 
         another.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-                alertDialogBuilder.setMessage("Do you want to save the changes?")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        try {
-                                            basketComplaint.setQuantity(String.valueOf(count.getSelectedItem()));
-                                            basketComplaint.setDescription(description.getText().toString());
-                                            basketComplaint.setIssueImagePath(cameraHelper.getImageName());
-                                            BasketComplaintDAO basketComplaintDAO = new BasketComplaintDAO(getActivity());
-                                            basketComplaintDAO.updateBasketComplaint(basketComplaint);
-                                            Intent myIntent = new Intent(getActivity(), SelectCategoryActivity.class);
-                                            startActivityForResult(myIntent, 0);
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                            Toast.makeText(getActivity(), "Something went wrong, Please try again", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                alertDialogBuilder.setNegativeButton("No",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                Intent myIntent = new Intent(getActivity(), SelectCategoryActivity.class);
-                                startActivityForResult(myIntent, 0);
-                            }
-                        });
-                AlertDialog alert = alertDialogBuilder.create();
-                alert.show();
-
-                Button posB = alert.getButton(DialogInterface.BUTTON_POSITIVE);
-                Button negB = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
-                posB.setBackgroundResource(R.drawable.blue_dark_blue_highlight);
-                posB.setTextColor(Color.WHITE);
-                posB.setTransformationMethod(null);
-                negB.setTransformationMethod(null);
-
+                askUserToSaveChanges(SelectCategoryActivity.class);
             }
         });
         return rootView;
@@ -260,13 +201,14 @@ public class EditDetailsFragment extends CameraHelper.CameraUtilFragment {
     @OnClick(R.id.ad_b_discard)
     public void onDiscard() {
         session.getComplaints().clear();
+        Intent myIntent = new Intent(getActivity(), BasketComplaintListActivity.class);
+        startActivityForResult(myIntent, 0);
     }
 
     @Override
     public void onResume(){
         super.onResume();
     }
-
 
     @OnClick(R.id.adTakePhoto)
     public void onTakePhoto() {
@@ -334,5 +276,63 @@ public class EditDetailsFragment extends CameraHelper.CameraUtilFragment {
         displayImageIfAvailable();
     }
 
+    public void askUserToSaveChanges(final Class outputClass){
 
+        boolean imagePathMatchesPlaceholder = false;
+        boolean imagePathMatches = false;
+
+        if(imagePathPlaceholderNull && cameraHelper.getImageName() == null){
+                imagePathMatches = true;
+        } else if (!imagePathPlaceholderNull && cameraHelper.getImageName() == null || imagePathPlaceholderNull && !(cameraHelper.getImageName() == null)) {
+                imagePathMatches = false;
+        } else if(!imagePathPlaceholderNull && !(cameraHelper.getImageName() == null)) {
+            imagePathMatchesPlaceholder = cameraHelper.getImageName().contentEquals(imagePathPlaceholder);
+        }
+
+        if(String.valueOf(count.getSelectedItem()).contentEquals(quantityPlaceholder) &&
+                description.getText().toString().contentEquals(descriptionPlaceholder) &&
+                (imagePathMatchesPlaceholder || imagePathMatches)){
+                Intent myIntent = new Intent(getActivity(), BasketComplaintListActivity.class);
+                startActivityForResult(myIntent, 0);
+        } else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+            alertDialogBuilder.setMessage("Do you want to save the changes?")
+                .setCancelable(false)
+                .setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                try {
+                                    basketComplaint.setQuantity(String.valueOf(count.getSelectedItem()));
+                                    basketComplaint.setDescription(description.getText().toString());
+                                    basketComplaint.setIssueImagePath(cameraHelper.getImageName());
+                                    BasketComplaintDAO basketComplaintDAO = new BasketComplaintDAO(getActivity());
+                                    basketComplaintDAO.updateBasketComplaint(basketComplaint);
+                                    Intent myIntent = new Intent(getActivity(), outputClass);
+                                    startActivityForResult(myIntent, 0);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(getActivity(), "Something went wrong, Please try again", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        Intent myIntent = new Intent(getActivity(), outputClass);
+                        startActivityForResult(myIntent, 0);
+                    }
+                });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+
+        Button posB = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+        Button negB = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
+        posB.setBackgroundResource(R.drawable.blue_dark_blue_highlight);
+        posB.setTextColor(Color.WHITE);
+        posB.setTransformationMethod(null);
+        negB.setTransformationMethod(null);
+        }
+
+    }
 }

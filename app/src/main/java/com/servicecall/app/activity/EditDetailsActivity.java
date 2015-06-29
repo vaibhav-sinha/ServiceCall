@@ -2,6 +2,8 @@ package com.servicecall.app.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 
 import com.servicecall.app.R;
 import com.servicecall.app.application.ServiceCallApplication;
@@ -52,4 +54,26 @@ public class EditDetailsActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         editDetailsFragment.onActivityResult(requestCode, resultCode, data);
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            editDetailsFragment.askUserToSaveChanges(BasketComplaintListActivity.class);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                editDetailsFragment.askUserToSaveChanges(BasketComplaintListActivity.class);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

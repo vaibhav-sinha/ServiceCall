@@ -15,6 +15,7 @@
     <string name="title_activity_address_info">My Address</string>
     <string name="title_activity_basket_complaint">My Basket</string>
     <string name="title_activity_my_issues">My Issues</string>
+    <string name="title_activity_fullscreen">Issue Pic</string>
 
     <string name="adAmenityTypeLabel">Issue Category</string>
     <string name="adCountLabel">Quantity</string>

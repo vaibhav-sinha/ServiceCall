@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,8 +86,6 @@ public class AddDetailsFragment extends CameraHelper.CameraUtilFragment  {
     Button retakePhoto;
     @InjectView(R.id.adPhotoDisplay)
     ImageView photoDisplay;
-    @InjectView(R.id.ivDelReset)
-    LinearLayout delResetContainer;
 
 
     int colorId;
@@ -115,6 +112,7 @@ public class AddDetailsFragment extends CameraHelper.CameraUtilFragment  {
         super.onCreate(savedInstanceState);
         ServiceCallApplication.getApplication().getComponent().inject(this);
         cameraHelper.setFragment(this);
+        cameraHelper.setImageName(null);
         eventBus.register(this);
     }
 
@@ -362,7 +360,9 @@ public class AddDetailsFragment extends CameraHelper.CameraUtilFragment  {
                 count.setVisibility(View.GONE);
                 countPlaceholder.setVisibility(View.VISIBLE);
                 countPlaceholder.setText(count.getSelectedItem().toString());
-                delResetContainer.setVisibility(View.GONE);
+                deletePhoto.setVisibility(View.GONE);
+                retakePhoto.setVisibility(View.GONE);
+
             } else {
                 editBasketComplaintDetails.setVisibility(View.GONE);
                 description.setVisibility(View.VISIBLE);
@@ -370,7 +370,8 @@ public class AddDetailsFragment extends CameraHelper.CameraUtilFragment  {
                 submit.setText("+Basket");
                 count.setVisibility(View.VISIBLE);
                 countPlaceholder.setVisibility(View.GONE);
-                delResetContainer.setVisibility(View.VISIBLE);
+                deletePhoto.setVisibility(View.VISIBLE);
+                retakePhoto.setVisibility(View.VISIBLE);
             }
         }
 
@@ -408,9 +409,8 @@ public class AddDetailsFragment extends CameraHelper.CameraUtilFragment  {
                     countPlaceholder.setVisibility(View.VISIBLE);
                     countPlaceholder.setText(count.getSelectedItem().toString());
                     displayImageIfAvailable();
-                    if(!TextUtils.isEmpty(cameraHelper.getImageName())) {
-                        delResetContainer.setVisibility(View.GONE);
-                    }
+                    deletePhoto.setVisibility(View.GONE);
+                    retakePhoto.setVisibility(View.GONE);
                 } else {
                     submit.setText("+Basket");
                     editBasketComplaintDetails.setVisibility(View.GONE);
@@ -419,7 +419,8 @@ public class AddDetailsFragment extends CameraHelper.CameraUtilFragment  {
                     descriptionPlaceholder.setVisibility(View.GONE);
                     count.setVisibility(View.VISIBLE);
                     countPlaceholder.setVisibility(View.GONE);
-                    delResetContainer.setVisibility(View.VISIBLE);
+                    deletePhoto.setVisibility(View.VISIBLE);
+                    retakePhoto.setVisibility(View.VISIBLE);
                 }
             } catch (Exception e){
                 e.printStackTrace();

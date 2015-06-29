@@ -1,5 +1,6 @@
 package com.servicecall.app.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -52,11 +53,24 @@ public class BasketComplaintListActivity extends BaseActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                Intent myIntent = new Intent(getApplicationContext(), SelectCategoryActivity.class);
+                myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivityForResult(myIntent, 0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent myIntent = new Intent(getApplicationContext(), SelectCategoryActivity.class);
+            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivityForResult(myIntent, 0);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -85,17 +99,6 @@ public class BasketComplaintListActivity extends BaseActivity {
             transaction.commit();
             contentFragment = fragment;
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-
-            finish();
-
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
 }

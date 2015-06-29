@@ -7,8 +7,6 @@ import android.graphics.Color;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.servicecall.app.R;
+import com.servicecall.app.activity.FullScreenImageActivity;
 import com.servicecall.app.activity.SelectCategoryActivity;
 import com.servicecall.app.application.ServiceCallApplication;
 import com.servicecall.app.base.BaseFragment;
@@ -26,6 +27,7 @@ import com.servicecall.app.helper.CameraHelper;
 import com.servicecall.app.helper.MyIssueDAO;
 import com.servicecall.app.model.ServerComplaint;
 import com.servicecall.app.util.Session;
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
@@ -74,9 +76,10 @@ public class ViewDetailsFragment extends BaseFragment {
     TextView additionalInfo;
     @InjectView(R.id.issueIcon)
     ImageView issuePic;
-
-    @InjectView(R.id.adPhotoDisplay)
-    ImageView photoDisplay;
+    @InjectView(R.id.vdIssuePic)
+    NetworkImageView issueImage;
+    @InjectView(R.id.vdIssuePicDummyFlow)
+    ImageView issueImageDummyFlow;
 
     int colorId;
     int colorIdPressed;
@@ -121,6 +124,34 @@ public class ViewDetailsFragment extends BaseFragment {
             occupantType.setText(serverComplaint.getOccupantType());
             propertyType.setText(serverComplaint.getPropertyType());
             additionalInfo.setText(serverComplaint.getAdditionalInfo());
+            ImageLoader imageLoader = ServiceCallApplication.getInstance().getImageLoader();
+            if (imageLoader == null)
+                imageLoader = ServiceCallApplication.getInstance().getImageLoader();
+
+                try {
+                    new BitmapWorkerTask(issueImageDummyFlow, 200).execute(serverComplaint.getIssueImageUrl()); // Adding for Demo purpose to display image right away only for images which are uploaded from same phone
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                try {
+                    if(!(serverComplaint.getIssueImageUrl() == null)) {
+                        issueImage.setImageUrl("https://interfinderdemo-bbagentapp.rhcloud.com/uploads/" + String.valueOf(serverComplaint.getIssueImageUrl().trim().replaceAll(".*/", "")), imageLoader);
+                    }
+                } catch (Exception e1){
+                    e1.printStackTrace();
+                }
+            final String issueImagePath = "https://interfinderdemo-bbagentapp.rhcloud.com/uploads/" + String.valueOf(serverComplaint.getIssueImageUrl().trim().replaceAll(".*/", ""));
+            Picasso.with(getActivity()).load(issueImagePath).into(issueImage);
+            issueImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(v.getContext(), FullScreenImageActivity.class);
+                    i.putExtra("IMAGE", issueImagePath);
+                    v.getContext().startActivity(i);
+                }
+            });
+
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -171,24 +202,6 @@ public class ViewDetailsFragment extends BaseFragment {
     @Override
     public void onResume(){
         super.onResume();
-    }
-
-    private void displayImageIfAvailable() {
-        if(!TextUtils.isEmpty(cameraHelper.getImageName())) {
-            new BitmapWorkerTask(photoDisplay, 200).execute(cameraHelper.getImageName());
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        cameraHelper.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        cameraHelper.onRestoreInstanceState(savedInstanceState);
     }
 
 }

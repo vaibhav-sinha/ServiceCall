@@ -5,14 +5,15 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.StateListDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eswaraj.web.dto.CategoryWithChildCategoryDto;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.servicecall.app.R;
 import com.servicecall.app.activity.MyIssuesListActivity;
 import com.servicecall.app.activity.SelectCategoryActivity;
@@ -36,14 +40,17 @@ import com.servicecall.app.data.api.DataApi;
 import com.servicecall.app.event.ComplaintSaveResponseEvent;
 import com.servicecall.app.event.ComplaintSubmitOrDiscardEvent;
 import com.servicecall.app.helper.BasketComplaintDAO;
+import com.servicecall.app.helper.CameraHelper;
 import com.servicecall.app.helper.MyIssueDAO;
 import com.servicecall.app.model.BasketComplaint;
 import com.servicecall.app.model.ServerComplaint;
 import com.servicecall.app.util.Session;
 
+import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -52,13 +59,14 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-
 public class AddressInfoFragment extends BaseFragment {
 
     @Inject
     Session session;
     @Inject
     DataApi dataApi;
+    @Inject
+    CameraHelper cameraHelper;
 
     SweetAlertDialog pDialog;
 
@@ -152,7 +160,27 @@ public class AddressInfoFragment extends BaseFragment {
     Boolean pushedToServer = false;
     Boolean alreadyInServer = false;
     Boolean checkboxChangeEvent = false;
+    Boolean imageUploadedToServer = false;
 
+    ProgressDialog prgDialog;
+    String encodedString;
+    Bitmap bitmap;
+    RequestParams params = new RequestParams();
+    private static int RESULT_LOAD_IMG = 1;
+    private static String url_upload_issue_image = "https://interfinderdemo-bbagentapp.rhcloud.com/fileUpload.php";
+
+    TextView messageText;
+    Button uploadButton;
+    int serverResponseCode = 0;
+    ProgressDialog dialog = null;
+
+    String upLoadServerUri = null;
+
+    /**********
+     * File Path
+     *************/
+    //final String uploadFilePath = "/mnt/sdcard/";
+    //final String uploadFileName = "service_lifecycle.png";
     public AddressInfoFragment() {
         // Required empty public constructor
     }
@@ -177,27 +205,27 @@ public class AddressInfoFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_address_info, container, false);
         ButterKnife.inject(this, rootView);
 
-        final String[] items = new String[]{"General needs tenant","Temporary housing tenant","Other tenant","Leaseholder","Freeholder"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.item_spinner, items);
+        final String[] items = new String[]{"General needs tenant", "Temporary housing tenant", "Other tenant", "Leaseholder", "Freeholder"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.item_spinner, items);
         occupantType.setAdapter(adapter);
 
-        final String[] items2 = new String[]{"House","Flat"};
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(),R.layout.item_spinner, items2);
+        final String[] items2 = new String[]{"House", "Flat"};
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(), R.layout.item_spinner, items2);
         propertyType.setAdapter(adapter2);
 
-        final String[] colorHexCode = new String[]{"7B9FAD","90BBC9","DBDBDB"};
-        for(String hexCodeVal : colorHexCode ) {
+        final String[] colorHexCode = new String[]{"7B9FAD", "90BBC9", "DBDBDB"};
+        for (String hexCodeVal : colorHexCode) {
             colorId = getActivity().getResources().getIdentifier("n_" + hexCodeVal.toLowerCase() + "_n", "color", getActivity().getPackageName());
             colorIdPressed = getActivity().getResources().getIdentifier("p_" + hexCodeVal.toLowerCase() + "_p", "color", getActivity().getPackageName());
             StateListDrawable states = new StateListDrawable();
-            states.addState(new int[] {android.R.attr.state_pressed},
+            states.addState(new int[]{android.R.attr.state_pressed},
                     getActivity().getResources().getDrawable(colorIdPressed));
-            states.addState(new int[] {android.R.attr.state_focused},
+            states.addState(new int[]{android.R.attr.state_focused},
                     getActivity().getResources().getDrawable(colorIdPressed));
-            states.addState(new int[] {},
+            states.addState(new int[]{},
                     getActivity().getResources().getDrawable(colorId));
-            if(Build.VERSION.SDK_INT >= 16) {
-                if(hexCodeVal.contentEquals("7B9FAD")) {
+            if (Build.VERSION.SDK_INT >= 16) {
+                if (hexCodeVal.contentEquals("7B9FAD")) {
                     submitComplaints.setBackground(states);
                 } else if (hexCodeVal.contentEquals("90BBC9")) {
                     resetDetails.setBackground(states);
@@ -205,7 +233,7 @@ public class AddressInfoFragment extends BaseFragment {
                     discardOrder.setBackground(states);
                 }
             } else {
-                if(hexCodeVal.contentEquals("7B9FAD")) {
+                if (hexCodeVal.contentEquals("7B9FAD")) {
                     submitComplaints.setBackgroundDrawable(states);
                 } else if (hexCodeVal.contentEquals("90BBC9")) {
                     resetDetails.setBackgroundDrawable(states);
@@ -233,7 +261,7 @@ public class AddressInfoFragment extends BaseFragment {
 
         JSONObject obj = null;
         try {
-            if(session.getUserRevGeocodedLocation() != null) {
+            if (session.getUserRevGeocodedLocation() != null) {
                 obj = new JSONObject(session.getUserRevGeocodedLocation());
                 postcode.setText(obj.getString("mPostalCode"));
                 JSONObject geoObject = obj.getJSONObject("mAddressLines");
@@ -243,40 +271,40 @@ public class AddressInfoFragment extends BaseFragment {
             e.printStackTrace();
         }
 
-                discardOrder.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+        discardOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-                        alertDialogBuilder
-                                .setTitle("Cancel complaints submission")
-                                .setMessage("Do you want to cancel complaints submission?")
-                                .setCancelable(true)
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent myIntent = new Intent(getActivity(), SelectCategoryActivity.class);
-                                        startActivityForResult(myIntent, 0);
-                                    }
-                                })
-                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                alertDialogBuilder
+                        .setTitle("Cancel complaints submission")
+                        .setMessage("Do you want to cancel complaints submission?")
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent myIntent = new Intent(getActivity(), SelectCategoryActivity.class);
+                                startActivityForResult(myIntent, 0);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
 
-                        AlertDialog alertDialog = alertDialogBuilder.create();
-                        alertDialog.show();
-                        Button posB = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                        Button negB = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-                        posB.setBackgroundResource(R.drawable.blue_dark_blue_highlight);
-                        posB.setTextColor(Color.WHITE);
-                        posB.setTransformationMethod(null);
-                        negB.setTransformationMethod(null);
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                Button posB = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                Button negB = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                posB.setBackgroundResource(R.drawable.blue_dark_blue_highlight);
+                posB.setTextColor(Color.WHITE);
+                posB.setTransformationMethod(null);
+                negB.setTransformationMethod(null);
 
-        }
-    });
+            }
+        });
 
         resetDetails.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -310,7 +338,7 @@ public class AddressInfoFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
 
-                if(session.getLatitude() != null) {
+                if (session.getLatitude() != null) {
 
                     if (!isValidEmail(email.getText().toString())) {
                         Toast.makeText(getActivity(), "Please enter a Valid Email Address", Toast.LENGTH_SHORT).show();
@@ -321,9 +349,13 @@ public class AddressInfoFragment extends BaseFragment {
                             email.getText().toString().trim().isEmpty()) {
                         Toast.makeText(getActivity(), "Some of the required fields are empty. Please try again.", Toast.LENGTH_LONG).show();
                     } else {
-                            new PushAllComplaintsToServer().execute();
+                        try {
+                            new uploadImageToServer().execute();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                }  else {
+                } else {
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Could not get your location. Make sure location setting is enabled on your device and try again.")
@@ -340,6 +372,40 @@ public class AddressInfoFragment extends BaseFragment {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
+    class uploadImageToServer extends AsyncTask<String, String, String> {
+
+        protected String doInBackground(String... args) {
+
+            try {
+                myIssueDAO = new MyIssueDAO();
+                basketComplaintDAO = new BasketComplaintDAO(getActivity());
+                basketComplaints = basketComplaintDAO.getAllBasketComplaints();
+                for (BasketComplaint basketComplaint : basketComplaints) {
+                    if (!(basketComplaint.getIssueImagePath() == null)) {
+                        encodeImagetoString(basketComplaint.getIssueImagePath(), basketComplaint.getIssueImagePath().trim().replaceAll(".*/", ""));
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            try {
+                new PushAllComplaintsToServer().execute();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                Toast.makeText(getActivity(), "Something went wrong, Please try again.",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     class PushAllComplaintsToServer extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
@@ -354,7 +420,7 @@ public class AddressInfoFragment extends BaseFragment {
             basketComplaintDAO = new BasketComplaintDAO(getActivity());
             basketComplaints = basketComplaintDAO.getAllBasketComplaints();
 
-            for (BasketComplaint basketComplaint : basketComplaints ){
+            for (BasketComplaint basketComplaint : basketComplaints) {
 
                 serverComplaint = new ServerComplaint();
                 serverComplaint.setCategoryId(Integer.valueOf(basketComplaint.getCategoryId()));
@@ -377,9 +443,13 @@ public class AddressInfoFragment extends BaseFragment {
                 serverComplaint.setEmail(email.getText().toString());
                 serverComplaint.setAdditionalInfo(additionalInfo.getText().toString());
                 serverComplaint.setDayTimeAvailability(dayTimeAvailability);
+                if (!(basketComplaint.getIssueImagePath() == null)) {
+                    serverComplaint.setIssueImageUrl(basketComplaint.getIssueImagePath());
+                } else {
+                    serverComplaint.setIssueImageUrl("");
+                }
                 serverComplaints.add(serverComplaint);
             }
-
 
         }
 
@@ -399,9 +469,9 @@ public class AddressInfoFragment extends BaseFragment {
             super.onPostExecute(s);
             progressDialog.cancel();
 
-            if(pushedToServer){
+            if (pushedToServer) {
 
-                try{
+                try {
                     BasketComplaintDAO basketComplaintDAO = new BasketComplaintDAO(getActivity());
                     ArrayList<BasketComplaint> basketComplaints = new ArrayList<>();
                     basketComplaints = basketComplaintDAO.getAllBasketComplaints();
@@ -415,14 +485,13 @@ public class AddressInfoFragment extends BaseFragment {
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
 
-                } catch( Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
             }
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -431,7 +500,7 @@ public class AddressInfoFragment extends BaseFragment {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.push_to_server:
-                if(session.getLatitude() != null) {
+                if (session.getLatitude() != null) {
                     if (!isValidEmail(email.getText().toString())) {
                         Toast.makeText(getActivity(), "Please enter a Valid Email Address", Toast.LENGTH_SHORT).show();
                     } else if (userName.getText().toString().trim().isEmpty() ||
@@ -441,9 +510,13 @@ public class AddressInfoFragment extends BaseFragment {
                             email.getText().toString().trim().isEmpty()) {
                         Toast.makeText(getActivity(), "Some of the required fields are empty. Please try again.", Toast.LENGTH_LONG).show();
                     } else {
-                        new PushAllComplaintsToServer().execute();
+                        try {
+                            new uploadImageToServer().execute();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                }  else {
+                } else {
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Could not get your location. Make sure location setting is enabled on your device and try again.")
@@ -455,7 +528,6 @@ public class AddressInfoFragment extends BaseFragment {
         }
     }
 
-
     private void sendEvent() {
         ComplaintSubmitOrDiscardEvent event = new ComplaintSubmitOrDiscardEvent();
         event.setSuccess(true);
@@ -463,10 +535,9 @@ public class AddressInfoFragment extends BaseFragment {
     }
 
     public void onEventMainThread(ComplaintSaveResponseEvent event) {
-        if(event.isSuccess()) {
+        if (event.isSuccess()) {
             sendEvent();
-        }
-        else {
+        } else {
             new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Error")
                     .setContentText("Oops! Something went wrong. Retry?")
@@ -489,9 +560,7 @@ public class AddressInfoFragment extends BaseFragment {
         }
     }
 
-
-    class myCheckBoxChangeClicker implements CheckBox.OnCheckedChangeListener
-    {
+    class myCheckBoxChangeClicker implements CheckBox.OnCheckedChangeListener {
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView,
@@ -501,76 +570,76 @@ public class AddressInfoFragment extends BaseFragment {
             checkboxChangeEvent = true;
 
             // Toast.makeText(CheckBoxCheckedDemo.this, &quot;Checked =&gt; &quot;+isChecked, Toast.LENGTH_SHORT).show();
-            if ( checkboxChangeEvent == true ) {
+            if (checkboxChangeEvent == true) {
                 int id = buttonView.getId();
 
                 if (id == R.id.cbMonAM) {
                     if (isChecked) {
                         prevValHolder = dayTimeAvailability;
-                        dayTimeAvailability = dayTimeAvailability + "Mon AM\t";
+                        dayTimeAvailability = dayTimeAvailability + "Mon AM ";
                     } else {
                         dayTimeAvailability = prevValHolder;
                     }
                 } else if (id == R.id.cbTueAM) {
                     if (isChecked) {
                         prevValHolder = dayTimeAvailability;
-                        dayTimeAvailability = dayTimeAvailability + "Tue AM\t";
+                        dayTimeAvailability = dayTimeAvailability + "Tue AM ";
                     } else {
                         dayTimeAvailability = prevValHolder;
                     }
                 } else if (id == R.id.cbWedAM) {
                     if (isChecked) {
                         prevValHolder = dayTimeAvailability;
-                        dayTimeAvailability = dayTimeAvailability + "Wed AM\t";
+                        dayTimeAvailability = dayTimeAvailability + "Wed AM ";
                     } else {
                         dayTimeAvailability = prevValHolder;
                     }
                 } else if (id == R.id.cbThuAM) {
                     if (isChecked) {
                         prevValHolder = dayTimeAvailability;
-                        dayTimeAvailability = dayTimeAvailability + "Thu AM\t";
+                        dayTimeAvailability = dayTimeAvailability + "Thu AM ";
                     } else {
                         dayTimeAvailability = prevValHolder;
                     }
                 } else if (id == R.id.cbFriAM) {
                     if (isChecked) {
                         prevValHolder = dayTimeAvailability;
-                        dayTimeAvailability = dayTimeAvailability + "Fri AM\t";
+                        dayTimeAvailability = dayTimeAvailability + "Fri AM ";
                     } else {
                         dayTimeAvailability = prevValHolder;
                     }
                 } else if (id == R.id.cbMonPM) {
                     if (isChecked) {
                         prevValHolder = dayTimeAvailability;
-                        dayTimeAvailability = dayTimeAvailability + "Mon PM\t";
+                        dayTimeAvailability = dayTimeAvailability + "Mon PM";
                     } else {
                         dayTimeAvailability = prevValHolder;
                     }
                 } else if (id == R.id.cbTuePM) {
                     if (isChecked) {
                         prevValHolder = dayTimeAvailability;
-                        dayTimeAvailability = dayTimeAvailability + "Tue PM\t";
+                        dayTimeAvailability = dayTimeAvailability + "Tue PM ";
                     } else {
                         dayTimeAvailability = prevValHolder;
                     }
                 } else if (id == R.id.cbWedPM) {
                     if (isChecked) {
                         prevValHolder = dayTimeAvailability;
-                        dayTimeAvailability = dayTimeAvailability + "Wed PM\t";
+                        dayTimeAvailability = dayTimeAvailability + "Wed PM ";
                     } else {
                         dayTimeAvailability = prevValHolder;
                     }
                 } else if (id == R.id.cbThuPM) {
                     if (isChecked) {
                         prevValHolder = dayTimeAvailability;
-                        dayTimeAvailability = dayTimeAvailability + "Thu PM\t";
+                        dayTimeAvailability = dayTimeAvailability + "Thu PM ";
                     } else {
                         dayTimeAvailability = prevValHolder;
                     }
                 } else if (id == R.id.cbFriPM) {
                     if (isChecked) {
                         prevValHolder = dayTimeAvailability;
-                        dayTimeAvailability = dayTimeAvailability + "Fri PM\t";
+                        dayTimeAvailability = dayTimeAvailability + "Fri PM ";
                     } else {
                         dayTimeAvailability = prevValHolder;
                     }
@@ -579,168 +648,93 @@ public class AddressInfoFragment extends BaseFragment {
         }
     }
 
+    // AsyncTask - To convert Image to String
+    public void encodeImagetoString(final String imgPath, final String issuePicFilename) {
+        new AsyncTask<Void, Void, String>() {
 
+            protected void onPreExecute() {
 
-    private void editTextAnimation() {
+            };
 
-
-        if( !userName.getText().toString().trim().isEmpty() ) {
-            userNameLabel.setVisibility(View.VISIBLE);
-        }
-        if( !address.getText().toString().trim().isEmpty() ) {
-            addressLabel.setVisibility(View.VISIBLE);
-        }
-        if( !postcode.getText().toString().trim().isEmpty() ) {
-            postcodeLabel.setVisibility(View.VISIBLE);
-        }
-        if( !additionalInfo.getText().toString().trim().isEmpty() ) {
-            additionalInfoLabel.setVisibility(View.VISIBLE);
-        }
-        if( !dayTelNum.getText().toString().trim().isEmpty() ) {
-            dayTelNumLabel.setVisibility(View.VISIBLE);
-        }
-        if( !workNum.getText().toString().trim().isEmpty() ) {
-            workNumLabel.setVisibility(View.VISIBLE);
-        }
-        if( !mobNum.getText().toString().trim().isEmpty() ) {
-            mobNumLabel.setVisibility(View.VISIBLE);
-        }
-        if( !email.getText().toString().trim().isEmpty() ) {
-            emailLabel.setVisibility(View.VISIBLE);
-        }
-
-
-        userName.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                if (userName.getText().toString().trim().length() == 0) {
-                    userNameLabel.setVisibility(View.INVISIBLE);
-                }
+            @Override
+            protected String doInBackground(Void... params) {
+                BitmapFactory.Options options = null;
+                options = new BitmapFactory.Options();
+                options.inSampleSize = 3;
+                bitmap = BitmapFactory.decodeFile(imgPath,
+                        options);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                // Must compress the Image to reduce image size to make upload easy
+                bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+                byte[] byte_arr = stream.toByteArray();
+                // Encode Image to String
+                encodedString = Base64.encodeToString(byte_arr, 0);
+                return "";
             }
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            @Override
+            protected void onPostExecute(String msg) {
+                // Put converted Image string into Async Http Post param
+                params.put("image", encodedString);
+                params.put("filename", issuePicFilename);
+                // Trigger Image upload
+                triggerImageUpload();
             }
+        }.execute(null, null, null);
+    }
 
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                userNameLabel.setVisibility(View.VISIBLE);
-            }
+    public void triggerImageUpload() {
+        uploadImage();
+    }
 
-        });
+    // Make Http call to upload Image to Php server
+    public void uploadImage() {
+        prgDialog = new ProgressDialog(getActivity());
+        // Set Cancelable as False
+        prgDialog.setCancelable(false);
+        prgDialog.setMessage("Uploading Image(s)");
+        prgDialog.show();
+        AsyncHttpClient client = new AsyncHttpClient();
+        // Don't forget to change the IP address to your LAN address. Port no as well.
+        client.post(url_upload_issue_image,
+                params, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        // Hide Progress Dialog
+                        prgDialog.hide();
+                        imageUploadedToServer = true;
+                        //Toast.makeText(getActivity(), responseBody.toString(),Toast.LENGTH_LONG).show();
+                    }
 
-        address.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                if (address.getText().toString().trim().length() == 0) {
-                    addressLabel.setVisibility(View.INVISIBLE);
-                }
-            }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        prgDialog.hide();
+                        imageUploadedToServer = false;
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+                        // When Http response code is '404'
+                        if (statusCode == 404) {
+                            Toast.makeText(getActivity(),
+                                    "Image Upload Status : Requested resource not found",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        // When Http response code is '500'
+                        else if (statusCode == 500) {
+                            Toast.makeText(getActivity(),
+                                    "Image Upload Status : Something went wrong at server end",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        // When Http response code other than 404, 500
+                        else {
+                            Toast.makeText(
+                                    getActivity(),
+                                    "Image Upload Status : Error Occured \n Most Common Error: \n1. Device not connected to Internet\n2. Web App is not deployed in App server\n3. App server is not running\n HTTP Status code : "
+                                            + statusCode, Toast.LENGTH_LONG)
+                                    .show();
+                        }
 
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                addressLabel.setVisibility(View.VISIBLE);
-            }
+                    }
 
-        });
-
-        postcode.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                if (postcode.getText().toString().trim().length() == 0) {
-                    postcodeLabel.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                postcodeLabel.setVisibility(View.VISIBLE);
-            }
-
-        });
-
-        dayTelNum.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                if (dayTelNum.getText().toString().trim().length() == 0) {
-                    dayTelNumLabel.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                dayTelNumLabel.setVisibility(View.VISIBLE);
-            }
-
-        });
-
-        workNum.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                if (workNum.getText().toString().trim().length() == 0) {
-                    workNumLabel.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                workNumLabel.setVisibility(View.VISIBLE);
-            }
-
-        });
-
-        mobNum.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                if (mobNum.getText().toString().trim().length() == 0) {
-                    mobNumLabel.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mobNumLabel.setVisibility(View.VISIBLE);
-            }
-
-        });
-
-
-        email.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                if (email.getText().toString().trim().length() == 0) {
-                    emailLabel.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                emailLabel.setVisibility(View.VISIBLE);
-            }
-
-        });
-
-        additionalInfo.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                if (additionalInfo.getText().toString().trim().length() == 0) {
-                    additionalInfoLabel.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                additionalInfoLabel.setVisibility(View.VISIBLE);
-            }
-
-        });
-
-
-    };
-
+                });
+    }
 
 }

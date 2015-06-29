@@ -88,10 +88,10 @@
             android:label="@string/title_activity_edit_details"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:parentActivityName=".activity.SelectComplaintActivity" >
+            android:parentActivityName=".activity.BasketComplaintListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.servicecall.app.activity.SelectComplaintActivity" />
+                android:value="com.servicecall.app.activity.BasketComplaintListActivity" />
         </activity>
         <activity
             android:name=".activity.ViewDetailsActivity"
@@ -100,10 +100,10 @@
             android:label="@string/title_activity_view_details"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:parentActivityName=".activity.SelectComplaintActivity" >
+            android:parentActivityName=".activity.MyIssuesListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.servicecall.app.activity.SelectComplaintActivity" />
+                android:value="com.servicecall.app.activity.MyIssuesListActivity" />
         </activity>
         <activity
             android:name=".activity.AddressInfoActivity"
@@ -111,7 +111,11 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_address_info"
             android:windowSoftInputMode="adjustPan|stateHidden"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".activity.BasketComplaintListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.servicecall.app.activity.BasketComplaintListActivity" />
         </activity>
         <activity
             android:name=".activity.BasketComplaintListActivity"
@@ -119,13 +123,29 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_basket_complaint"
             android:windowSoftInputMode="adjustPan|stateHidden"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".activity.SelectCategoryActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.servicecall.app.activity.SelectCategoryActivity" />
         </activity>
         <activity
             android:name=".activity.MyIssuesListActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_my_issues"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".activity.SelectCategoryActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.servicecall.app.activity.SelectCategoryActivity" />
+        </activity>
+        <activity
+            android:name=".activity.FullScreenImageActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_fullscreen"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
         </activity>
