@@ -143,8 +143,14 @@ public class CameraHelper {
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
+                File folderPath = new File(Environment.getExternalStorageDirectory() + File.separator + "interfinder");
+                if(!folderPath.exists()){
+                    folderPath.mkdir();
+                }
                 File destination = new File(Environment.getExternalStorageDirectory() + File.separator + "interfinder" + File.separator,
-                        System.currentTimeMillis() + ".jpg");
+                    System.currentTimeMillis() + ".jpg");
+/*                File destination = new File(Environment.getExternalStorageDirectory(),
+                        System.currentTimeMillis() + ".jpg");*/
 
                 FileOutputStream fo;
                 try {

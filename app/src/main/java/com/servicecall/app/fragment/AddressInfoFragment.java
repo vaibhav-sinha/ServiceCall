@@ -338,8 +338,6 @@ public class AddressInfoFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
 
-                if (session.getLatitude() != null) {
-
                     if (!isValidEmail(email.getText().toString())) {
                         Toast.makeText(getActivity(), "Please enter a Valid Email Address", Toast.LENGTH_SHORT).show();
                     } else if (userName.getText().toString().trim().isEmpty() ||
@@ -354,14 +352,7 @@ public class AddressInfoFragment extends BaseFragment {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
-                } else {
-                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Oops...")
-                            .setContentText("Could not get your location. Make sure location setting is enabled on your device and try again.")
-                            .show();
                 }
-
             }
         });
 
@@ -382,7 +373,11 @@ public class AddressInfoFragment extends BaseFragment {
                 basketComplaints = basketComplaintDAO.getAllBasketComplaints();
                 for (BasketComplaint basketComplaint : basketComplaints) {
                     if (!(basketComplaint.getIssueImagePath() == null)) {
-                        encodeImagetoString(basketComplaint.getIssueImagePath(), basketComplaint.getIssueImagePath().trim().replaceAll(".*/", ""));
+                        try {
+                            encodeImagetoString(basketComplaint.getIssueImagePath(), basketComplaint.getIssueImagePath().trim().replaceAll(".*/", ""));
+                        } catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
                 }
 
@@ -500,7 +495,6 @@ public class AddressInfoFragment extends BaseFragment {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.push_to_server:
-                if (session.getLatitude() != null) {
                     if (!isValidEmail(email.getText().toString())) {
                         Toast.makeText(getActivity(), "Please enter a Valid Email Address", Toast.LENGTH_SHORT).show();
                     } else if (userName.getText().toString().trim().isEmpty() ||
@@ -516,12 +510,6 @@ public class AddressInfoFragment extends BaseFragment {
                             e.printStackTrace();
                         }
                     }
-                } else {
-                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Oops...")
-                            .setContentText("Could not get your location. Make sure location setting is enabled on your device and try again.")
-                            .show();
-                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -665,10 +653,15 @@ public class AddressInfoFragment extends BaseFragment {
                         options);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 // Must compress the Image to reduce image size to make upload easy
-                bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
-                byte[] byte_arr = stream.toByteArray();
-                // Encode Image to String
-                encodedString = Base64.encodeToString(byte_arr, 0);
+                try{
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+                    byte[] byte_arr = stream.toByteArray();
+                    // Encode Image to String
+                    encodedString = Base64.encodeToString(byte_arr, 0);
+                } catch (Exception e){
+                    e.printStackTrace();
+                    encodedString = "";
+                }
                 return "";
             }
 
