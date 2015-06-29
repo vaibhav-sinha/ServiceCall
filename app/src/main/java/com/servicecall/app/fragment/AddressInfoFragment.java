@@ -689,11 +689,6 @@ public class AddressInfoFragment extends BaseFragment {
 
     // Make Http call to upload Image to Php server
     public void uploadImage() {
-        prgDialog = new ProgressDialog(getActivity());
-        // Set Cancelable as False
-        prgDialog.setCancelable(false);
-        prgDialog.setMessage("Uploading Image(s)");
-        prgDialog.show();
         AsyncHttpClient client = new AsyncHttpClient();
         // Don't forget to change the IP address to your LAN address. Port no as well.
         client.post(url_upload_issue_image,
@@ -701,14 +696,12 @@ public class AddressInfoFragment extends BaseFragment {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         // Hide Progress Dialog
-                        prgDialog.hide();
                         imageUploadedToServer = true;
                         //Toast.makeText(getActivity(), responseBody.toString(),Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        prgDialog.hide();
                         imageUploadedToServer = false;
 
                         // When Http response code is '404'

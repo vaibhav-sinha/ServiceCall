@@ -1,6 +1,7 @@
 package com.servicecall.app.fragment;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +53,8 @@ public class MyIssuesListFragment extends Fragment{
     public static String filename = "mySharedFile";
     TextView myIssuesCount;
     Boolean isInternetPresent = false;
+
+    ProgressDialog progressDialog ;
 
     @Inject
     Session session;
@@ -127,6 +130,16 @@ public class MyIssuesListFragment extends Fragment{
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage("Retrieving Complaints, Please wait ..");
+            progressDialog.setIndeterminate(false);
+            progressDialog.setCancelable(true);
+            progressDialog.show();
+        }
+
+        @Override
         protected ArrayList<ServerComplaint> doInBackground(Void... arg0) {
             myIssueDAO = new MyIssueDAO();
             ArrayList<ServerComplaint> myIssueList = myIssueDAO.getAllMyIssues();
@@ -135,6 +148,7 @@ public class MyIssuesListFragment extends Fragment{
 
         @Override
         protected void onPostExecute(final ArrayList<ServerComplaint> myIssueList) {
+            progressDialog.cancel();
             if (activityWeakRef.get() != null
                     && !activityWeakRef.get().isFinishing()) {
 //                Log.d("myIssues", myIssueList.toString());
