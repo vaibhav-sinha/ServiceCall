@@ -33,7 +33,8 @@ public class SplashFragment extends BaseFragment {
     @Inject
     DataApi dataApi;
 
-    Boolean isInternetPresent =  false;
+    Boolean isInternetPresent =  false, screenVisible = false;
+    private Toast toast1, toast2;
 
     public SplashFragment() {
         // Required empty public constructor
@@ -83,8 +84,10 @@ public class SplashFragment extends BaseFragment {
             SetupDoneEvent eventToSend = new SetupDoneEvent();
             eventToSend.setSuccess(true);
             eventBus.post(eventToSend);
+            getActivity().findViewById(R.id.progressBar).setVisibility(View.GONE);
         }
         else {
+            getActivity().findViewById(R.id.progressBar).setVisibility(View.GONE);
             new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Oops...")
                     .setContentText("Could not get app setup data from internet. Check if your internet connection works")
@@ -95,10 +98,21 @@ public class SplashFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        screenVisible = true;
         isInternetPresent = new NetworkChangeReceiver().checkInternet(getActivity());
         if (isInternetPresent) {
+            toast1 = Toast.makeText(getActivity(), "Loading Categories, Please wait ...", Toast.LENGTH_LONG);
+            toast1.show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(screenVisible)
+                        toast1.cancel();
+                }
+            }, 4000);
             dataApi.loadCategoriesData(getActivity());
         } else {
+            getActivity().findViewById(R.id.progressBar).setVisibility(View.GONE);
             final Toast toast = Toast.makeText(getActivity(), "Internet Connection Unavailable. Please connect to Internet to proceed further", Toast.LENGTH_SHORT);
             toast.show();
             getActivity().registerReceiver(
@@ -110,7 +124,8 @@ public class SplashFragment extends BaseFragment {
                 public void run() {
                     toast.cancel();
                 }
-            }, 2000);        }
+            }, 3000);
+        }
     }
 
     private class NetworkChangeReceiver extends BroadcastReceiver {
@@ -120,6 +135,15 @@ public class SplashFragment extends BaseFragment {
 
             if(checkInternet(context))
             {
+                toast2 = Toast.makeText(getActivity(), "Loading Categories, Please wait ...", Toast.LENGTH_LONG);
+                toast2.show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(screenVisible)
+                            toast2.cancel();
+                    }
+                }, 4000);
                 dataApi.loadCategoriesData(getActivity());
             }
         }
@@ -135,5 +159,18 @@ public class SplashFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        screenVisible = false;
+        try {
+            if(toast1 != null)
+                toast1.cancel();
+            if(toast2 != null)
+                toast2.cancel();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -4,10 +4,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.servicecall.app.R;
 import com.servicecall.app.application.ServiceCallApplication;
@@ -20,6 +22,9 @@ import butterknife.ButterKnife;
 public class SelectCategoryActivity extends BaseActivity {
 
     private SelectCategoryFragment selectCategoryFragment;
+    private LocationManager locationManager;
+    private AlertDialog.Builder alertDialogBuilder;
+    private AlertDialog alert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,12 @@ public class SelectCategoryActivity extends BaseActivity {
         ButterKnife.inject(this);
         ServiceCallApplication.getApplication().getComponent().inject(this);
         eventBus.register(this);
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        if (locationManager == null) {
+            Toast.makeText(SelectCategoryActivity.this, "Location Service Not Found", Toast.LENGTH_LONG).show();
+        }
 
         selectCategoryFragment = new SelectCategoryFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.sc_fl_container, selectCategoryFragment).commit();
@@ -51,12 +62,6 @@ public class SelectCategoryActivity extends BaseActivity {
             }
             startActivity(i);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        invalidateOptionsMenu();
     }
 
     @Override
@@ -106,5 +111,48 @@ public void exitFromApp(){
     negB.setTransformationMethod(null);
 
 }
+
+    private void showGPSDisabledAlertToUser(){
+        if(alertDialogBuilder == null) {
+            alertDialogBuilder = new AlertDialog.Builder(this);
+        }
+
+        alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Enable GPS?",
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                Intent callGPSSettingIntent = new Intent(
+                                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(callGPSSettingIntent);
+                            }
+                        });
+        alertDialogBuilder.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id){
+                        dialog.cancel();
+                    }
+                });
+        if(alert == null) {
+            alert = alertDialogBuilder.create();
+        }
+        if(!alert.isShowing() && !isFinishing()) {
+            alert.show();
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        invalidateOptionsMenu();
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            showGPSDisabledAlertToUser();
+        }
+
+    }
+
 }
 

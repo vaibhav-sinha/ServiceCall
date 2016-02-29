@@ -1,12 +1,7 @@
 package com.servicecall.app.activity;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.FrameLayout;
 
 import com.servicecall.app.R;
 import com.servicecall.app.application.ServiceCallApplication;
@@ -15,7 +10,6 @@ import com.servicecall.app.event.SetupDoneEvent;
 import com.servicecall.app.fragment.SplashFragment;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class SplashActivity extends BaseActivity {
 
